@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ConfigureDialog</class>
+ <class>Dialog</class>
  <widget class="QDialog" name="Dialog">
   <property name="geometry">
    <rect>
@@ -30,7 +30,6 @@
       <item row="0" column="1">
        <widget class="QLineEdit" name="lineEdit0"/>
       </item>
-
       <item row="1" column="0">
        <widget class="QLabel" name="label1">
         <property name="text">
@@ -41,7 +40,6 @@
       <item row="1" column="1">
        <widget class="QLineEdit" name="lineEdit1"/>
       </item>
-
       <item row="2" column="0">
        <widget class="QLabel" name="label2">
         <property name="text">
@@ -52,7 +50,6 @@
       <item row="2" column="1">
        <widget class="QLineEdit" name="lineEdit2"/>
       </item>
-
       <item row="3" column="0">
        <widget class="QLabel" name="label3">
         <property name="text">
@@ -63,11 +60,10 @@
       <item row="3" column="1">
        <widget class="QLineEdit" name="lineEdit3"/>
       </item>
-
       <item row="4" column="0">
        <widget class="QLabel" name="label4">
         <property name="text">
-         <string>Sampling (0-1):  </string>
+         <string>Points to Sample:</string>
         </property>
        </widget>
       </item>
@@ -90,38 +86,5 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>ConfigureDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>ConfigureDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

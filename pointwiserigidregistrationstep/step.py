@@ -10,15 +10,27 @@ from PySide import QtCore
 from mountpoints.workflowstep import WorkflowStepMountPoint
 from pointwiserigidregistrationstep.configuredialog import ConfigureDialog
 
+from gias.common import alignment_fitting as AF
+from pointwiserigidregistrationstep.widgets.mayaviregistrationviewerwidget import MayaviRegistrationViewerWidget
 
-class Point-wiseRigidRegistrationStep(WorkflowStepMountPoint):
+regMethods = {
+              'Correspondent Rigid': AF.fitRigid,
+              'Correspondent Rigid+Scale': AF.fitRigidScale,
+              'Correspondent Affine': AF.fitAffine,
+              'ICP Rigid Source-Target': AF.fitDataRigidEPDP,
+              'ICP Rigid Target-Source': AF.fitDataRigidDPEP,
+              'ICP Rigid+Scale Source-Target': AF.fitDataRigidScaleEPDP,
+              'ICP Rigid+Scale Target-Source': AF.fitDataRigidScaleDPEP,
+             }
+
+class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
     '''
     Skeleton step which is intended to be a helpful starting point
     for new steps.
     '''
 
     def __init__(self, location):
-        super(Point-wiseRigidRegistrationStep, self).__init__('Point-wise Rigid Registration', location)
+        super(PointWiseRigidRegistrationStep, self).__init__('Point-wise Rigid Registration', location)
         self._configured = False # A step cannot be executed until it has been configured.
         self._category = 'Registration'
         # Add any other initialisation code here:
@@ -43,8 +55,15 @@ class Point-wiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._config['UI Mode'] = 'True'
         self._config['Registration Method'] = 'Correspondent Rigid'
         self._config['Min Relatve Error '] = '1e-3'
-        self._config['Sampling (0-1)'] = '1.0'
+        self._config['Points to Sample'] = '1000'
 
+        self.sourceData = None
+        self.targetData = None
+        self.sourceDataAligned = None
+        self.transform = None
+        self.RMSE = None
+
+        self._widget = None
 
     def execute(self):
         '''
@@ -53,7 +72,22 @@ class Point-wiseRigidRegistrationStep(WorkflowStepMountPoint):
         may be connected up to a button in a widget for example.
         '''
         # Put your execute step code here before calling the '_doneExecution' method.
-        self._doneExecution()
+        if self._config['UI Mode']=='True'
+            self._widget = MayaviRegistrationViewerWidget(self.sourceData, self.targetData, self._config)
+            self._widget._ui.registerButton.clicked.connect(self._register)
+            self._widget._ui.acceptButton.clicked.connect(self._doneExecution)
+            self._widget.setModal(True)
+            self._setCurrentWidget(self._widget)
+
+        elif self._config['UI Mode']=='False'
+            self._register()
+            self._doneExecution()
+
+    def _register(self):
+        reg = regMethods[self_config['Registration Method']]
+        xtol = float(self._config['Min Relative Error'])
+        samples = float(self._config['Points to Sample'])
+        self.transform, self.sourceDataAligned, (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, xtol=xtol, sample=samples, outputErrors=True)
 
     def setPortData(self, index, dataIn):
         '''
@@ -62,9 +96,9 @@ class Point-wiseRigidRegistrationStep(WorkflowStepMountPoint):
         uses port for this step then the index can be ignored.
         '''
         if index == 0:
-            portData0 = dataIn # ju#pointcloud
+            self.sourceData = dataIn # ju#pointcloud
         else:
-            portData1 = dataIn # ju#pointcloud
+            self.targetData = dataIn # ju#pointcloud
 
     def getPortData(self, index):
         '''
@@ -73,13 +107,13 @@ class Point-wiseRigidRegistrationStep(WorkflowStepMountPoint):
         provides port for this step then the index can be ignored.
         '''
         if index == 2:
-            portData2 = None # ju#pointcloud
+            portData2 = self.sourceDataAligned # ju#pointcloud
             return portData2
         elif index == 3:
-            portData3 = None # ju#rigidtransformvector
+            portData3 = self.transform # ju#rigidtransformvector
             return portData3
         else:
-            portData4 = None # ju#float
+            portData4 = self.RMSE # ju#float
             return portData4
 
     def configure(self):
@@ -129,7 +163,7 @@ class Point-wiseRigidRegistrationStep(WorkflowStepMountPoint):
         conf.setValue('UI Mode', self._config['UI Mode'])
         conf.setValue('Registration Method', self._config['Registration Method'])
         conf.setValue('Min Relatve Error ', self._config['Min Relatve Error '])
-        conf.setValue('Sampling (0-1)', self._config['Sampling (0-1)'])
+        conf.setValue('Points to Sample', self._config['Points to Sample'])
         conf.endGroup()
 
 
@@ -147,7 +181,7 @@ class Point-wiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._config['UI Mode'] = conf.value('UI Mode', 'True')
         self._config['Registration Method'] = conf.value('Registration Method', 'Correspondent Rigid')
         self._config['Min Relatve Error '] = conf.value('Min Relatve Error ', '1e-3')
-        self._config['Sampling (0-1)'] = conf.value('Sampling (0-1)', '1.0')
+        self._config['Points to Sample'] = conf.value('Points to Sample', '1000')
         conf.endGroup()
 
         d = ConfigureDialog()
