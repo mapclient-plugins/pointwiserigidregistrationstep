@@ -54,7 +54,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._config['identifier'] = ''
         self._config['UI Mode'] = 'True'
         self._config['Registration Method'] = 'Correspondent Rigid'
-        self._config['Min Relatve Error '] = '1e-3'
+        self._config['Min Relative Error'] = '1e-3'
         self._config['Points to Sample'] = '1000'
 
         self.sourceData = None
@@ -73,9 +73,11 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         '''
         # Put your execute step code here before calling the '_doneExecution' method.
         if self._config['UI Mode']=='True'
-            self._widget = MayaviRegistrationViewerWidget(self.sourceData, self.targetData, self._config)
+            self._widget = MayaviRegistrationViewerWidget(self.sourceData, self.targetData, self._config, self._register)
             self._widget._ui.registerButton.clicked.connect(self._register)
             self._widget._ui.acceptButton.clicked.connect(self._doneExecution)
+            self._widget._ui.abortButton.clicked.connect(self._abort)
+            self._widget._ui.resetButton.clicked.connect(self._reset)
             self._widget.setModal(True)
             self._setCurrentWidget(self._widget)
 
@@ -88,6 +90,15 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         xtol = float(self._config['Min Relative Error'])
         samples = float(self._config['Points to Sample'])
         self.transform, self.sourceDataAligned, (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, xtol=xtol, sample=samples, outputErrors=True)
+        return self.transform, self.sourceDataAligned, self.RMSE
+
+    def _abort(self):
+        raise RuntimeError, 'registration aborted'
+
+    def _reset(self):
+        self.sourceDataAligned = None
+        self.transform = None
+        self.RMSE = None
 
     def setPortData(self, index, dataIn):
         '''

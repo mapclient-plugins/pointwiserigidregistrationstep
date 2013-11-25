@@ -75,8 +75,8 @@ class ConfigureDialog(QtGui.QDialog):
         config['identifier'] = self._ui.lineEdit0.text()
         config['UI Mode'] = self._ui.lineEdit1.text()
         config['Registration Method'] = self._ui.lineEdit2.text()
-        config['Min Relatve Error '] = self._ui.lineEdit3.text()
-        config['Sampling (0-1)'] = self._ui.lineEdit4.text()
+        config['Min Relative Error '] = self._ui.lineEdit3.text()
+        config['Points to Sample'] = self._ui.lineEdit4.text()
         return config
 
     def setConfig(self, config):
@@ -89,6 +89,6 @@ class ConfigureDialog(QtGui.QDialog):
         self._ui.lineEdit0.setText(config['identifier'])
         self._ui.lineEdit1.setText(config['UI Mode'])
         self._ui.lineEdit2.setText(config['Registration Method'])
-        self._ui.lineEdit3.setText(config['Min Relatve Error '])
-        self._ui.lineEdit4.setText(config['Sampling (0-1)'])
+        self._ui.lineEdit3.setText(config['Min Relative Error '])
+        self._ui.lineEdit4.setText(config['Points to Sample'])
 
