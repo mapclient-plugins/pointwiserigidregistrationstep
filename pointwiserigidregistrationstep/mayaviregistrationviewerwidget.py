@@ -59,10 +59,13 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._regMethods = regMethods
         self._config = config
 
+        print 'init...', self._config
+
         # create self._objects
         self._objects = MayaviViewerObjectsContainer()
         self._objects.addObject('source', MayaviViewerDataPoints('source', self._sourceData, renderArgs=self._sourceRenderArgs))
         self._objects.addObject('target', MayaviViewerDataPoints('target', self._targetData, renderArgs=self._targetRenderArgs))
+        self._objects.addObject('registered', MayaviViewerDataPoints('registered', self._sourceData, renderArgs=self._registeredRenderArgs))
 
         self._makeConnections()
         self._initialiseObjectTable()
@@ -71,6 +74,7 @@ class MayaviRegistrationViewerWidget(QDialog):
 
         # self.testPlot()
         # self.drawObjects()
+        print 'finished init...', self._config
 
     def _makeConnections(self):
         self._ui.tableWidget.itemClicked.connect(self._tableItemClicked)
@@ -81,16 +85,19 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._ui.abortButton.clicked.connect(self._abort)
         self._ui.acceptButton.clicked.connect(self._accept)
 
-        self._ui.regMethodsComboBox.activated.connect(self._updateConfig)
-        self._ui.xtolLineEdit.textChanged.connect(self._updateConfig)
-        self._ui.samplesLineEdit.textChanged.connect(self._updateConfig)
+        self._ui.regMethodsComboBox.activated.connect(self._updateConfigRegMethod)
+        self._ui.xtolLineEdit.textChanged.connect(self._updateConfigXtol)
+        self._ui.samplesLineEdit.textChanged.connect(self._updateConfigSamples)
 
     def _initialiseSettings(self):
-        for m in self._regMethods:
-            self._ui.regMethodsComboBox.addItem(m)
-
+        # self._ui.regMethodsComboBox.X(self._config['Registration Method'])
         self._ui.xtolLineEdit.setText(self._config['Min Relative Error'])
         self._ui.samplesLineEdit.setText(self._config['Points to Sample'])
+
+        print 'initialising settings...', self._config
+
+        for m in self._regMethods:
+            self._ui.regMethodsComboBox.addItem(m)
 
     def _initialiseObjectTable(self):
 
@@ -102,16 +109,21 @@ class MayaviRegistrationViewerWidget(QDialog):
         
         self._addObjectToTable(0, 'source', self._objects.getObject('source'))
         self._addObjectToTable(1, 'target', self._objects.getObject('target'))
+        self._addObjectToTable(2, 'registered', self._objects.getObject('registered'), checked=False)
 
         self._ui.tableWidget.resizeColumnToContents(self.objectTableHeaderColumns['visible'])
         self._ui.tableWidget.resizeColumnToContents(self.objectTableHeaderColumns['type'])
 
-    def _addObjectToTable(self, row, name, obj):
+    def _addObjectToTable(self, row, name, obj, checked=True):
         typeName = obj.typeName
         print typeName
         print name
         tableItem = QTableWidgetItem(name)
-        tableItem.setCheckState(Qt.Checked)
+        if checked:
+            tableItem.setCheckState(Qt.Checked)
+        else:
+            tableItem.setCheckState(Qt.Unchecked)
+
         self._ui.tableWidget.setItem(row, self.objectTableHeaderColumns['visible'], tableItem)
         self._ui.tableWidget.setItem(row, self.objectTableHeaderColumns['type'], QTableWidgetItem(typeName))
 
@@ -155,25 +167,39 @@ class MayaviRegistrationViewerWidget(QDialog):
         for name in self._objects.getObjectNames():
             self._objects.getObject(name).draw(self._scene)
 
-    def _updateConfig(self):
-        self._config['Registration Method'] = self._ui.regMethodsCombox.currentText()
+    def _updateConfigRegMethod(self):
+        self._config['Registration Method'] = self._ui.regMethodsComboBox.currentText()
+
+    def _updateConfigXtol(self):
         self._config['Min Relative Error'] = self._ui.xtolLineEdit.text()
+
+    def _updateConfigSamples(self):
         self._config['Points to Sample'] = self._ui.samplesLineEdit.text()
 
     def _register(self):
         transform, self._registeredData, RMSE = self._registerFunc()
-        registeredObj = MayaviViewerDataPoints('registered', self._registeredData, renderArgs=self._registeredRenderArgs)
-        self._objects.addObject('registered', registeredObj)
-        self._addObjectToTable(2, 'registered', registeredObj)
-        print 'added registered data points'
-        self._ui.tableWidget.resizeColumnToContents(self.objectTableHeaderColumns['visible'])
-        self._ui.tableWidget.resizeColumnToContents(self.objectTableHeaderColumns['type'])
+        # registeredObj = MayaviViewerDataPoints('registered', self._registeredData, renderArgs=self._registeredRenderArgs)
+        # self._objects.addObject('registered', registeredObj)
+        # self._addObjectToTable(2, 'registered', registeredObj)
+        # print 'added registered data points'
+        # self._ui.tableWidget.resizeColumnToContents(self.objectTableHeaderColumns['visible'])
+        # self._ui.tableWidget.resizeColumnToContents(self.objectTableHeaderColumns['type'])
+        # print 'table items added'
+
+        # update registered datacloud
+        regObj = self._objects.getObject('registered')
+        regObj.updateGeometry(self._registeredData, self._scene)
+        regTableItem = self._ui.tableWidget.item(2, self.objectTableHeaderColumns['visible'])
+        regTableItem.setCheckState(Qt.Checked)
 
     def _reset(self):
         # delete viewer table row
-        self._ui.tableWidget.removeRow(2)
-        # delete scene object
-        self._objects.getObject('registered').remove()
+        # self._ui.tableWidget.removeRow(2)
+        # reset registered datacloud
+        regObj = self._objects.getObject('registered')
+        regObj.updateGeometry(self._sourceData, self._scene)
+        regTableItem = self._ui.tableWidget.item(2, self.objectTableHeaderColumns['visible'])
+        regTableItem.setCheckState(Qt.Unchecked)
 
     def _accept(self):
         self._close()

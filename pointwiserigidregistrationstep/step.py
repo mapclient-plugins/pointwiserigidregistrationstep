@@ -53,7 +53,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._config = {}
         self._config['identifier'] = ''
         self._config['UI Mode'] = 'True'
-        self._config['Registration Method'] = 'Correspondent Rigid'
+        self._config['Registration Method'] = 'Correspondent Affine'
         self._config['Min Relative Error'] = '1e-3'
         self._config['Points to Sample'] = '1000'
 
@@ -71,6 +71,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         Make sure you call the _doneExecution() method when finished.  This method
         may be connected up to a button in a widget for example.
         '''
+        print 'fong', self._config['Points to Sample']
         # Put your execute step code here before calling the '_doneExecution' method.
         if self._config['UI Mode']=='True':
             self._widget = MayaviRegistrationViewerWidget(self.sourceData, self.targetData, self._config, self._register, sorted(regMethods.keys()))
@@ -88,7 +89,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
     def _register(self):
         reg = regMethods[self._config['Registration Method']]
         xtol = float(self._config['Min Relative Error'])
-        samples = float(self._config['Points to Sample'])
+        samples = int(self._config['Points to Sample'])
         self.transform, self.sourceDataAligned, (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, xtol=xtol, sample=samples, outputErrors=True)
         print 'Registered...'
         print 'RMSE:', self.RMSE

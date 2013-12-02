@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mayaviregistrationviewerwidget.ui'
 #
-# Created: Sun Dec  1 21:47:18 2013
+# Created: Mon Dec  2 13:06:38 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -48,7 +48,7 @@ class Ui_Dialog(object):
         sizePolicy.setHeightForWidth(self.tableWidget.sizePolicy().hasHeightForWidth())
         self.tableWidget.setSizePolicy(sizePolicy)
         self.tableWidget.setMinimumSize(QtCore.QSize(0, 0))
-        self.tableWidget.setMaximumSize(QtCore.QSize(16777215, 100))
+        self.tableWidget.setMaximumSize(QtCore.QSize(16777215, 150))
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(2)
         self.tableWidget.setRowCount(0)
@@ -198,4 +198,4 @@ class Ui_Dialog(object):
         self.screenshotFilenameLineEdit.setText(QtGui.QApplication.translate("Dialog", "screenshot.png", None, QtGui.QApplication.UnicodeUTF8))
         self.screenshotSaveButton.setText(QtGui.QApplication.translate("Dialog", "Save Screenshot", None, QtGui.QApplication.UnicodeUTF8))
 
-from mappluginutils.mayaviviewer.mayaviscenewidget import MayaviSceneWidget
+from mappluginutils.mayaviviewer import MayaviSceneWidget
