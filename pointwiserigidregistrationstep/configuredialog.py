@@ -1,7 +1,8 @@
 
 
 from PySide import QtGui
-from pointwiserigidregistrationstep.ui_configuredialog import Ui_ConfigureDialog
+from PySide.QtGui import QDialog, QFileDialog, QDialogButtonBox
+from pointwiserigidregistrationstep.ui_configuredialog import Ui_Dialog
 
 INVALID_STYLE_SHEET = 'background-color: rgba(239, 0, 0, 50)'
 DEFAULT_STYLE_SHEET = ''
@@ -17,7 +18,7 @@ class ConfigureDialog(QtGui.QDialog):
         '''
         QtGui.QDialog.__init__(self, parent)
         
-        self._ui = Ui_ConfigureDialog()
+        self._ui = Ui_Dialog()
         self._ui.setupUi(self)
 
         # Keep track of the previous identifier so that we can track changes
@@ -62,6 +63,7 @@ class ConfigureDialog(QtGui.QDialog):
         else:
             self._ui.lineEdit0.setStyleSheet(INVALID_STYLE_SHEET)
 
+        self._ui.buttonBox.button(QDialogButtonBox.Ok).setEnabled(valid)
         return valid
 
     def getConfig(self):
@@ -75,7 +77,7 @@ class ConfigureDialog(QtGui.QDialog):
         config['identifier'] = self._ui.lineEdit0.text()
         config['UI Mode'] = self._ui.lineEdit1.text()
         config['Registration Method'] = self._ui.lineEdit2.text()
-        config['Min Relative Error '] = self._ui.lineEdit3.text()
+        config['Min Relative Error'] = self._ui.lineEdit3.text()
         config['Points to Sample'] = self._ui.lineEdit4.text()
         return config
 
@@ -89,6 +91,6 @@ class ConfigureDialog(QtGui.QDialog):
         self._ui.lineEdit0.setText(config['identifier'])
         self._ui.lineEdit1.setText(config['UI Mode'])
         self._ui.lineEdit2.setText(config['Registration Method'])
-        self._ui.lineEdit3.setText(config['Min Relative Error '])
+        self._ui.lineEdit3.setText(config['Min Relative Error'])
         self._ui.lineEdit4.setText(config['Points to Sample'])
 

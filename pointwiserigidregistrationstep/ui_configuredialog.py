@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'configuredialog.ui'
 #
-# Created: Mon Nov 25 12:05:14 2013
+# Created: Sun Dec  1 20:45:43 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -58,6 +58,8 @@ class Ui_Dialog(object):
         self.gridLayout.addWidget(self.buttonBox, 1, 0, 1, 1)
 
         self.retranslateUi(Dialog)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), Dialog.accept)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
@@ -65,6 +67,6 @@ class Ui_Dialog(object):
         self.label0.setText(QtGui.QApplication.translate("Dialog", "identifier:  ", None, QtGui.QApplication.UnicodeUTF8))
         self.label1.setText(QtGui.QApplication.translate("Dialog", "UI Mode:  ", None, QtGui.QApplication.UnicodeUTF8))
         self.label2.setText(QtGui.QApplication.translate("Dialog", "Registration Method:  ", None, QtGui.QApplication.UnicodeUTF8))
-        self.label3.setText(QtGui.QApplication.translate("Dialog", "Min Relatve Error :  ", None, QtGui.QApplication.UnicodeUTF8))
+        self.label3.setText(QtGui.QApplication.translate("Dialog", "Min Relatve Error:  ", None, QtGui.QApplication.UnicodeUTF8))
         self.label4.setText(QtGui.QApplication.translate("Dialog", "Points to Sample:", None, QtGui.QApplication.UnicodeUTF8))
 

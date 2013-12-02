@@ -11,7 +11,7 @@ from mountpoints.workflowstep import WorkflowStepMountPoint
 from pointwiserigidregistrationstep.configuredialog import ConfigureDialog
 
 from gias.common import alignment_fitting as AF
-from pointwiserigidregistrationstep.widgets.mayaviregistrationviewerwidget import MayaviRegistrationViewerWidget
+from pointwiserigidregistrationstep.mayaviregistrationviewerwidget import MayaviRegistrationViewerWidget
 
 regMethods = {
               'Correspondent Rigid': AF.fitRigid,
@@ -37,19 +37,19 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         # Ports:
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#uses',
-                      'ju#pointcloud'))
+                      'ju#pointcoordinates'))
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#uses',
-                      'ju#pointcloud'))
+                      'ju#pointcoordinates'))
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#provides',
-                      'ju#pointcloud'))
+                      'ju#pointcoordinates'))
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#provides',
                       'ju#rigidtransformvector'))
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#provides',
-                      'ju#float'))
+                      'float'))
         self._config = {}
         self._config['identifier'] = ''
         self._config['UI Mode'] = 'True'
@@ -72,27 +72,31 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         may be connected up to a button in a widget for example.
         '''
         # Put your execute step code here before calling the '_doneExecution' method.
-        if self._config['UI Mode']=='True'
-            self._widget = MayaviRegistrationViewerWidget(self.sourceData, self.targetData, self._config, self._register)
-            self._widget._ui.registerButton.clicked.connect(self._register)
+        if self._config['UI Mode']=='True':
+            self._widget = MayaviRegistrationViewerWidget(self.sourceData, self.targetData, self._config, self._register, sorted(regMethods.keys()))
+            # self._widget._ui.registerButton.clicked.connect(self._register)
             self._widget._ui.acceptButton.clicked.connect(self._doneExecution)
             self._widget._ui.abortButton.clicked.connect(self._abort)
             self._widget._ui.resetButton.clicked.connect(self._reset)
             self._widget.setModal(True)
             self._setCurrentWidget(self._widget)
 
-        elif self._config['UI Mode']=='False'
+        elif self._config['UI Mode']=='False':
             self._register()
             self._doneExecution()
 
     def _register(self):
-        reg = regMethods[self_config['Registration Method']]
+        reg = regMethods[self._config['Registration Method']]
         xtol = float(self._config['Min Relative Error'])
         samples = float(self._config['Points to Sample'])
         self.transform, self.sourceDataAligned, (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, xtol=xtol, sample=samples, outputErrors=True)
+        print 'Registered...'
+        print 'RMSE:', self.RMSE
+        print 'T:', self.transform
         return self.transform, self.sourceDataAligned, self.RMSE
 
     def _abort(self):
+        self._doneExecution()
         raise RuntimeError, 'registration aborted'
 
     def _reset(self):
@@ -173,7 +177,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         conf.setValue('identifier', self._config['identifier'])
         conf.setValue('UI Mode', self._config['UI Mode'])
         conf.setValue('Registration Method', self._config['Registration Method'])
-        conf.setValue('Min Relatve Error ', self._config['Min Relatve Error '])
+        conf.setValue('Min Relative Error', self._config['Min Relative Error'])
         conf.setValue('Points to Sample', self._config['Points to Sample'])
         conf.endGroup()
 
@@ -191,7 +195,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._config['identifier'] = conf.value('identifier', '')
         self._config['UI Mode'] = conf.value('UI Mode', 'True')
         self._config['Registration Method'] = conf.value('Registration Method', 'Correspondent Rigid')
-        self._config['Min Relatve Error '] = conf.value('Min Relatve Error ', '1e-3')
+        self._config['Min Relative Error'] = conf.value('Min Relative Error', '1e-3')
         self._config['Points to Sample'] = conf.value('Points to Sample', '1000')
         conf.endGroup()
 
