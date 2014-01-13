@@ -90,7 +90,6 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._ui.samplesLineEdit.textChanged.connect(self._updateConfigSamples)
 
     def _initialiseSettings(self):
-        # self._ui.regMethodsComboBox.X(self._config['Registration Method'])
         self._ui.xtolLineEdit.setText(self._config['Min Relative Error'])
         self._ui.samplesLineEdit.setText(self._config['Points to Sample'])
 
@@ -98,6 +97,8 @@ class MayaviRegistrationViewerWidget(QDialog):
 
         for m in self._regMethods:
             self._ui.regMethodsComboBox.addItem(m)
+
+        self._ui.regMethodsComboBox.setCurrentIndex(self._regMethods.index(self._config['Registration Method']))
 
     def _initialiseObjectTable(self):
 
