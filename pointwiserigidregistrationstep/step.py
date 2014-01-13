@@ -12,6 +12,7 @@ from pointwiserigidregistrationstep.configuredialog import ConfigureDialog
 
 from gias.common import alignment_fitting as AF
 from pointwiserigidregistrationstep.mayaviregistrationviewerwidget import MayaviRegistrationViewerWidget
+from mappluginutils.datatypes import transformations as T
 
 regMethods = {
               'Correspondent Rigid': AF.fitRigid,
@@ -22,6 +23,16 @@ regMethods = {
               'ICP Rigid+Scale Source-Target': AF.fitDataRigidScaleEPDP,
               'ICP Rigid+Scale Target-Source': AF.fitDataRigidScaleDPEP,
              }
+
+regMethodTransforms = {
+                          'Correspondent Rigid': T.RigidTransform,
+                          'Correspondent Rigid+Scale': T.RigidScaleTransform,
+                          'Correspondent Affine': T.AffineTransform,
+                          'ICP Rigid Source-Target': T.RigidTransform,
+                          'ICP Rigid Target-Source': T.RigidTransform,
+                          'ICP Rigid+Scale Source-Target': T.RigidScaleTransform,
+                          'ICP Rigid+Scale Target-Source': T.RigidScaleTransform,
+                        }
 
 class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
     '''
@@ -46,7 +57,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
                       'ju#pointcoordinates'))
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#provides',
-                      'ju#rigidtransformvector'))
+                      'ju#geometrictransform'))
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#provides',
                       'float'))
@@ -90,10 +101,11 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         reg = regMethods[self._config['Registration Method']]
         xtol = float(self._config['Min Relative Error'])
         samples = int(self._config['Points to Sample'])
-        self.transform, self.sourceDataAligned, (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, xtol=xtol, sample=samples, outputErrors=True)
+        T, self.sourceDataAligned, (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, xtol=xtol, sample=samples, outputErrors=True)
+        self.transform = regMethodTransforms[self._config['Registration Method']](T)
         print 'Registered...'
         print 'RMSE:', self.RMSE
-        print 'T:', self.transform
+        print 'T:', T
         return self.transform, self.sourceDataAligned, self.RMSE
 
     def _abort(self):
