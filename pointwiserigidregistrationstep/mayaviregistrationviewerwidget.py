@@ -192,6 +192,9 @@ class MayaviRegistrationViewerWidget(QDialog):
         regTableItem = self._ui.tableWidget.item(2, self.objectTableHeaderColumns['visible'])
         regTableItem.setCheckState(Qt.Checked)
 
+        # update error fields
+        self._ui.RMSELineEdit.setText(str(RMSE))
+
     def _reset(self):
         # delete viewer table row
         # self._ui.tableWidget.removeRow(2)
@@ -201,10 +204,14 @@ class MayaviRegistrationViewerWidget(QDialog):
         regTableItem = self._ui.tableWidget.item(2, self.objectTableHeaderColumns['visible'])
         regTableItem.setCheckState(Qt.Unchecked)
 
+        # clear error fields
+        self._ui.RMSELineEdit.clear()
+
     def _accept(self):
         self._close()
 
     def _abort(self):
+        self._reset()
         self._close()
 
     def _close(self):

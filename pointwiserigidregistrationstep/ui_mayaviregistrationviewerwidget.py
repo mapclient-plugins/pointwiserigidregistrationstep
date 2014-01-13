@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'mayaviregistrationviewerwidget.ui'
 #
-# Created: Mon Dec  2 13:06:38 2013
+# Created: Mon Jan 13 23:01:01 2014
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(914, 548)
+        Dialog.resize(914, 621)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -104,6 +104,35 @@ class Ui_Dialog(object):
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName("line")
         self.verticalLayout.addWidget(self.line)
+        self.errorGroup = QtGui.QGroupBox(self.widget1)
+        self.errorGroup.setObjectName("errorGroup")
+        self.formLayout_3 = QtGui.QFormLayout(self.errorGroup)
+        self.formLayout_3.setObjectName("formLayout_3")
+        self.RMSELineEdit = QtGui.QLineEdit(self.errorGroup)
+        self.RMSELineEdit.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.RMSELineEdit.setReadOnly(True)
+        self.RMSELineEdit.setObjectName("RMSELineEdit")
+        self.formLayout_3.setWidget(0, QtGui.QFormLayout.FieldRole, self.RMSELineEdit)
+        self.RMSELabel = QtGui.QLabel(self.errorGroup)
+        self.RMSELabel.setObjectName("RMSELabel")
+        self.formLayout_3.setWidget(0, QtGui.QFormLayout.LabelRole, self.RMSELabel)
+        self.meanErrorLineEdit = QtGui.QLineEdit(self.errorGroup)
+        self.meanErrorLineEdit.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.meanErrorLineEdit.setReadOnly(True)
+        self.meanErrorLineEdit.setObjectName("meanErrorLineEdit")
+        self.formLayout_3.setWidget(1, QtGui.QFormLayout.FieldRole, self.meanErrorLineEdit)
+        self.SDLineEdit = QtGui.QLineEdit(self.errorGroup)
+        self.SDLineEdit.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.SDLineEdit.setReadOnly(True)
+        self.SDLineEdit.setObjectName("SDLineEdit")
+        self.formLayout_3.setWidget(2, QtGui.QFormLayout.FieldRole, self.SDLineEdit)
+        self.meanErrorLabel = QtGui.QLabel(self.errorGroup)
+        self.meanErrorLabel.setObjectName("meanErrorLabel")
+        self.formLayout_3.setWidget(1, QtGui.QFormLayout.LabelRole, self.meanErrorLabel)
+        self.SDLabel = QtGui.QLabel(self.errorGroup)
+        self.SDLabel.setObjectName("SDLabel")
+        self.formLayout_3.setWidget(2, QtGui.QFormLayout.LabelRole, self.SDLabel)
+        self.verticalLayout.addWidget(self.errorGroup)
         self.screenshotgroup = QtGui.QGroupBox(self.widget1)
         self.screenshotgroup.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.screenshotgroup.setObjectName("screenshotgroup")
@@ -178,7 +207,7 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Model Viewer", None, QtGui.QApplication.UnicodeUTF8))
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Point to Point Registration", None, QtGui.QApplication.UnicodeUTF8))
         self.tableWidget.setSortingEnabled(False)
         self.tableWidget.horizontalHeaderItem(0).setText(QtGui.QApplication.translate("Dialog", "Visible", None, QtGui.QApplication.UnicodeUTF8))
         self.tableWidget.horizontalHeaderItem(1).setText(QtGui.QApplication.translate("Dialog", "Type", None, QtGui.QApplication.UnicodeUTF8))
@@ -189,6 +218,10 @@ class Ui_Dialog(object):
         self.resetButton.setText(QtGui.QApplication.translate("Dialog", "Reset", None, QtGui.QApplication.UnicodeUTF8))
         self.acceptButton.setText(QtGui.QApplication.translate("Dialog", "Accept", None, QtGui.QApplication.UnicodeUTF8))
         self.abortButton.setText(QtGui.QApplication.translate("Dialog", "Abort", None, QtGui.QApplication.UnicodeUTF8))
+        self.errorGroup.setTitle(QtGui.QApplication.translate("Dialog", "Registration Errors", None, QtGui.QApplication.UnicodeUTF8))
+        self.RMSELabel.setText(QtGui.QApplication.translate("Dialog", "RMS:", None, QtGui.QApplication.UnicodeUTF8))
+        self.meanErrorLabel.setText(QtGui.QApplication.translate("Dialog", "Mean:", None, QtGui.QApplication.UnicodeUTF8))
+        self.SDLabel.setText(QtGui.QApplication.translate("Dialog", "S.D.:", None, QtGui.QApplication.UnicodeUTF8))
         self.screenshotgroup.setTitle(QtGui.QApplication.translate("Dialog", "Screenshot", None, QtGui.QApplication.UnicodeUTF8))
         self.pixelsXLabel.setText(QtGui.QApplication.translate("Dialog", "Pixels X:", None, QtGui.QApplication.UnicodeUTF8))
         self.screenshotPixelXLineEdit.setText(QtGui.QApplication.translate("Dialog", "800", None, QtGui.QApplication.UnicodeUTF8))
