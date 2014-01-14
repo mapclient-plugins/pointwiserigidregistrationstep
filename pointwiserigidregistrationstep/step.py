@@ -109,7 +109,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         return self.transform, self.sourceDataAligned, self.RMSE
 
     def _abort(self):
-        self._doneExecution()
+        # self._doneExecution()
         raise RuntimeError, 'registration aborted'
 
     def _reset(self):
