@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'configuredialog.ui'
 #
-# Created: Sun Dec  1 20:45:43 2013
-#      by: pyside-uic 0.2.14 running on PySide 1.1.2
+# Created: Wed Jan 15 18:24:56 2014
+#      by: pyside-uic 0.2.13 running on PySide 1.1.0
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from PySide import QtCore, QtGui
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(418, 303)
+        Dialog.resize(418, 393)
         self.gridLayout = QtGui.QGridLayout(Dialog)
         self.gridLayout.setObjectName("gridLayout")
         self.configGroupBox = QtGui.QGroupBox(Dialog)
@@ -50,6 +50,24 @@ class Ui_Dialog(object):
         self.lineEdit4 = QtGui.QLineEdit(self.configGroupBox)
         self.lineEdit4.setObjectName("lineEdit4")
         self.formLayout.setWidget(4, QtGui.QFormLayout.FieldRole, self.lineEdit4)
+        self.lineEdit5 = QtGui.QLineEdit(self.configGroupBox)
+        self.lineEdit5.setObjectName("lineEdit5")
+        self.formLayout.setWidget(5, QtGui.QFormLayout.FieldRole, self.lineEdit5)
+        self.lineEdit6 = QtGui.QLineEdit(self.configGroupBox)
+        self.lineEdit6.setObjectName("lineEdit6")
+        self.formLayout.setWidget(6, QtGui.QFormLayout.FieldRole, self.lineEdit6)
+        self.lineEdit7 = QtGui.QLineEdit(self.configGroupBox)
+        self.lineEdit7.setObjectName("lineEdit7")
+        self.formLayout.setWidget(7, QtGui.QFormLayout.FieldRole, self.lineEdit7)
+        self.label = QtGui.QLabel(self.configGroupBox)
+        self.label.setObjectName("label")
+        self.formLayout.setWidget(5, QtGui.QFormLayout.LabelRole, self.label)
+        self.label_2 = QtGui.QLabel(self.configGroupBox)
+        self.label_2.setObjectName("label_2")
+        self.formLayout.setWidget(6, QtGui.QFormLayout.LabelRole, self.label_2)
+        self.label_3 = QtGui.QLabel(self.configGroupBox)
+        self.label_3.setObjectName("label_3")
+        self.formLayout.setWidget(7, QtGui.QFormLayout.LabelRole, self.label_3)
         self.gridLayout.addWidget(self.configGroupBox, 0, 0, 1, 1)
         self.buttonBox = QtGui.QDialogButtonBox(Dialog)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
@@ -69,4 +87,7 @@ class Ui_Dialog(object):
         self.label2.setText(QtGui.QApplication.translate("Dialog", "Registration Method:  ", None, QtGui.QApplication.UnicodeUTF8))
         self.label3.setText(QtGui.QApplication.translate("Dialog", "Min Relatve Error:  ", None, QtGui.QApplication.UnicodeUTF8))
         self.label4.setText(QtGui.QApplication.translate("Dialog", "Points to Sample:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("Dialog", "Initial Translation:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("Dialog", "Initial Rotation:", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("Dialog", "Initial Scale:", None, QtGui.QApplication.UnicodeUTF8))
 

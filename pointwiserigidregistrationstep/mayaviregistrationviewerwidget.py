@@ -89,6 +89,16 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._ui.xtolLineEdit.textChanged.connect(self._updateConfigXtol)
         self._ui.samplesLineEdit.textChanged.connect(self._updateConfigSamples)
 
+        self._ui.initTransXLineEdit.textChanged.connect(self._updateInitTrans)
+        self._ui.initTransYLineEdit.textChanged.connect(self._updateInitTrans)
+        self._ui.initTransZLineEdit.textChanged.connect(self._updateInitTrans)
+
+        self._ui.initRotXLineEdit.textChanged.connect(self._updateInitRot)
+        self._ui.initRotYLineEdit.textChanged.connect(self._updateInitRot)
+        self._ui.initRotZLineEdit.textChanged.connect(self._updateInitRot)
+
+        self._ui.initScaleLineEdit.textChanged.connect(self._updateInitScale)
+
     def _initialiseSettings(self):
         self._ui.xtolLineEdit.setText(self._config['Min Relative Error'])
         self._ui.samplesLineEdit.setText(self._config['Points to Sample'])
@@ -99,6 +109,18 @@ class MayaviRegistrationViewerWidget(QDialog):
             self._ui.regMethodsComboBox.addItem(m)
 
         self._ui.regMethodsComboBox.setCurrentIndex(self._regMethods.index(self._config['Registration Method']))
+
+        initTrans = eval(self._config['Init Trans'])
+        self._ui.initTransXLineEdit.setText(str(initTrans[0]))
+        self._ui.initTransYLineEdit.setText(str(initTrans[1]))
+        self._ui.initTransZLineEdit.setText(str(initTrans[2]))
+
+        initRot = eval(self._config['Init Rot'])
+        self._ui.initRotXLineEdit.setText(str(initRot[0]))
+        self._ui.initRotYLineEdit.setText(str(initRot[1]))
+        self._ui.initRotZLineEdit.setText(str(initRot[2]))
+
+        self._ui.initScaleLineEdit.setText(self._config['Init Scale'])
 
     def _initialiseObjectTable(self):
 
@@ -176,6 +198,19 @@ class MayaviRegistrationViewerWidget(QDialog):
 
     def _updateConfigSamples(self):
         self._config['Points to Sample'] = self._ui.samplesLineEdit.text()
+
+    def _updateInitTrans(self):
+        self._config['Init Trans'] = '[' + self._ui.initTransXLineEdit.text() + ','\
+                                         + self._ui.initTransYLineEdit.text() + ','\
+                                         + self._ui.initTransZLineEdit.text() + ']'
+
+    def _updateInitRot(self):
+        self._config['Init Rot'] = '[' + self._ui.initRotXLineEdit.text() + ','\
+                                       + self._ui.initRotYLineEdit.text() + ','\
+                                       + self._ui.initRotZLineEdit.text() + ']'
+
+    def _updateInitScale(self):
+        self._config['Init Scale'] = self._ui.initScaleLineEdit.text()
 
     def _register(self):
         transform, self._registeredData, RMSE = self._registerFunc()

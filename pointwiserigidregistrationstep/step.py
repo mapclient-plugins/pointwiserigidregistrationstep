@@ -14,6 +14,8 @@ from gias.common import alignment_fitting as AF
 from pointwiserigidregistrationstep.mayaviregistrationviewerwidget import MayaviRegistrationViewerWidget
 from mappluginutils.datatypes import transformations as T
 
+import numpy as np
+
 regMethods = {
               'Correspondent Rigid': AF.fitRigid,
               'Correspondent Rigid+Scale': AF.fitRigidScale,
@@ -67,6 +69,9 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._config['Registration Method'] = 'Correspondent Affine'
         self._config['Min Relative Error'] = '1e-3'
         self._config['Points to Sample'] = '1000'
+        self._config['Init Trans'] = '[0,0,0]'
+        self._config['Init Rot'] = '[0,0,0]'
+        self._config['Init Scale'] = '1.0'
 
         self.sourceData = None
         self.targetData = None
@@ -97,11 +102,40 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
             self._register()
             self._doneExecution()
 
+    def _makeX0(self):
+        t0 = eval(self._config['Init Trans'])
+        r0 = eval(self._config['Init Rot'])
+        s0 = float(self._config['Init Scale'])
+
+        # auto initialise translation
+        if t0==[0,0,0]:
+            t0 = self.targetData.mean(0) - self.sourceData.mean(0)
+
+        reg = self._config['Registration Method']
+        if reg=='Correspondent Affine':
+            return None
+        elif 'Rigid+Scale' in reg:
+            x0 = np.hstack([t0, r0, s0])
+        elif 'Rigid' in reg:
+            x0 = np.hstack([t0, r0])
+        else:
+            return None
+
+
     def _register(self):
         reg = regMethods[self._config['Registration Method']]
         xtol = float(self._config['Min Relative Error'])
         samples = int(self._config['Points to Sample'])
-        T, self.sourceDataAligned, (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, xtol=xtol, sample=samples, outputErrors=True)
+        x0 = self._makeX0()
+        if x0==None:
+            T, self.sourceDataAligned,\
+            (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, xtol=xtol, 
+                                     sample=samples, outputErrors=True)
+        else:
+            T, self.sourceDataAligned,\
+            (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, x0=x0, xtol=xtol,
+                                     sample=samples, outputErrors=True)
+
         self.transform = regMethodTransforms[self._config['Registration Method']](T)
         print 'Registered...'
         print 'RMSE:', self.RMSE
@@ -192,6 +226,9 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         conf.setValue('Registration Method', self._config['Registration Method'])
         conf.setValue('Min Relative Error', self._config['Min Relative Error'])
         conf.setValue('Points to Sample', self._config['Points to Sample'])
+        conf.setValue('Init Trans', self._config['Init Trans'])
+        conf.setValue('Init Rot', self._config['Init Rot'])
+        conf.setValue('Init Scale', self._config['Init Scale'])
         conf.endGroup()
 
 
@@ -210,6 +247,9 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._config['Registration Method'] = conf.value('Registration Method', 'Correspondent Rigid')
         self._config['Min Relative Error'] = conf.value('Min Relative Error', '1e-3')
         self._config['Points to Sample'] = conf.value('Points to Sample', '1000')
+        self._config['Init Trans'] = conf.value('Init Trans', '[0,0,0]')
+        self._config['Init Rot'] = conf.value('Init Rot', '[0,0,0]')
+        self._config['Init Scale'] = conf.value('Init Scale', '1.0')
         conf.endGroup()
 
         d = ConfigureDialog()
