@@ -59,7 +59,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._regMethods = regMethods
         self._config = config
 
-        print 'init...', self._config
+        # print 'init...', self._config
 
         # create self._objects
         self._objects = MayaviViewerObjectsContainer()
@@ -103,7 +103,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._ui.xtolLineEdit.setText(self._config['Min Relative Error'])
         self._ui.samplesLineEdit.setText(self._config['Points to Sample'])
 
-        print 'initialising settings...', self._config
+        # print 'initialising settings...', self._config
 
         for m in self._regMethods:
             self._ui.regMethodsComboBox.addItem(m)

@@ -87,7 +87,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         Make sure you call the _doneExecution() method when finished.  This method
         may be connected up to a button in a widget for example.
         '''
-        print 'fong', self._config['Points to Sample']
+        print 'points to sample:', self._config['Points to Sample']
         # Put your execute step code here before calling the '_doneExecution' method.
         if self._config['UI Mode']=='True':
             self._widget = MayaviRegistrationViewerWidget(self.sourceData, self.targetData, self._config, self._register, sorted(regMethods.keys()))
@@ -111,13 +111,15 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         if t0==[0,0,0]:
             t0 = self.targetData.mean(0) - self.sourceData.mean(0)
 
+        print 't0, r0, s0:', t0, r0, s0
+
         reg = self._config['Registration Method']
         if reg=='Correspondent Affine':
             return None
         elif 'Rigid+Scale' in reg:
-            x0 = np.hstack([t0, r0, s0])
+            return np.hstack([t0, r0, s0])
         elif 'Rigid' in reg:
-            x0 = np.hstack([t0, r0])
+            return np.hstack([t0, r0])
         else:
             return None
 
@@ -127,13 +129,14 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         xtol = float(self._config['Min Relative Error'])
         samples = int(self._config['Points to Sample'])
         x0 = self._makeX0()
+        print 'T0:', x0
         if x0==None:
             T, self.sourceDataAligned,\
             (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, xtol=xtol, 
                                      sample=samples, outputErrors=True)
         else:
             T, self.sourceDataAligned,\
-            (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, x0=x0, xtol=xtol,
+            (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, t0=x0, xtol=xtol,
                                      sample=samples, outputErrors=True)
 
         self.transform = regMethodTransforms[self._config['Registration Method']](T)
