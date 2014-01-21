@@ -12,7 +12,7 @@ class ConfigureDialog(QtGui.QDialog):
     Configure dialog to present the user with the options to configure this step.
     '''
 
-    def __init__(self, parent=None):
+    def __init__(self, regMethods, parent=None):
         '''
         Constructor
         '''
@@ -29,7 +29,23 @@ class ConfigureDialog(QtGui.QDialog):
         # We will use this method to decide whether the identifier is unique.
         self.identifierOccursCount = None
 
+        self._regMethods = regMethods
+        self._setupDialog()
         self._makeConnections()
+
+    def _setupDialog(self):
+        for m in self._regMethods:
+            self._ui.regMethodsComboBox.addItem(m)
+
+        self._ui.sampleLineEdit.setValidator(QtGui.QIntValidator())
+        self._ui.xtolLineEdit.setValidator(QtGui.QDoubleValidator())
+        self._ui.txLineEdit.setValidator(QtGui.QDoubleValidator())
+        self._ui.tyLineEdit.setValidator(QtGui.QDoubleValidator())
+        self._ui.tzLineEdit.setValidator(QtGui.QDoubleValidator())
+        self._ui.rxLineEdit.setValidator(QtGui.QDoubleValidator())
+        self._ui.ryLineEdit.setValidator(QtGui.QDoubleValidator())
+        self._ui.rzLineEdit.setValidator(QtGui.QDoubleValidator())
+        self._ui.sLineEdit.setValidator(QtGui.QDoubleValidator())
 
     def _makeConnections(self):
         self._ui.lineEdit0.textChanged.connect(self.validate)
@@ -75,13 +91,17 @@ class ConfigureDialog(QtGui.QDialog):
         self._previousIdentifier = self._ui.lineEdit0.text()
         config = {}
         config['identifier'] = self._ui.lineEdit0.text()
-        config['UI Mode'] = self._ui.lineEdit1.text()
-        config['Registration Method'] = self._ui.lineEdit2.text()
-        config['Min Relative Error'] = self._ui.lineEdit3.text()
-        config['Points to Sample'] = self._ui.lineEdit4.text()
-        config['Init Trans'] = self._ui.lineEdit5.text()
-        config['Init Rot'] = self._ui.lineEdit6.text()
-        config['Init Scale'] = self._ui.lineEdit7.text()
+        config['UI Mode'] = self._ui.UICheckBox.isChecked()
+        config['Registration Method'] = self._ui.regMethodsComboBox.currentText()
+        config['Min Relative Error'] = self._ui.xtolLineEdit.text()
+        config['Points to Sample'] = self._ui.sampleLineEdit.text()
+        config['Init Trans'] = '[' + self._ui.txLineEdit.text() + ','\
+                                   + self._ui.tyLineEdit.text() + ','\
+                                   + self._ui.tzLineEdit.text() + ']'
+        config['Init Rot'] = '[' + self._ui.rxLineEdit.text() + ','\
+                                 + self._ui.ryLineEdit.text() + ','\
+                                 + self._ui.rzLineEdit.text() + ']'
+        config['Init Scale'] = self._ui.sLineEdit.text()
         return config
 
     def setConfig(self, config):
@@ -92,11 +112,17 @@ class ConfigureDialog(QtGui.QDialog):
         '''
         self._previousIdentifier = config['identifier']
         self._ui.lineEdit0.setText(config['identifier'])
-        self._ui.lineEdit1.setText(config['UI Mode'])
-        self._ui.lineEdit2.setText(config['Registration Method'])
-        self._ui.lineEdit3.setText(config['Min Relative Error'])
-        self._ui.lineEdit4.setText(config['Points to Sample'])
-        self._ui.lineEdit5.setText(config['Init Trans'])
-        self._ui.lineEdit6.setText(config['Init Rot'])
-        self._ui.lineEdit7.setText(config['Init Scale'])
+        self._ui.UICheckBox.setChecked(bool(config['UI Mode']))
+        self._ui.regMethodsComboBox.setCurrentIndex(self._regMethods.index(config['Registration Method']))
+        self._ui.xtolLineEdit.setText(config['Min Relative Error'])
+        self._ui.sampleLineEdit.setText(config['Points to Sample'])
+        initTrans = eval(config['Init Trans'])
+        self._ui.txLineEdit.setText(str(initTrans[0]))
+        self._ui.tyLineEdit.setText(str(initTrans[1]))
+        self._ui.tzLineEdit.setText(str(initTrans[2]))
+        initRot = eval(config['Init Rot'])
+        self._ui.rxLineEdit.setText(str(initRot[0]))
+        self._ui.ryLineEdit.setText(str(initRot[1]))
+        self._ui.rzLineEdit.setText(str(initRot[2]))
+        self._ui.sLineEdit.setText(config['Init Scale'])
 

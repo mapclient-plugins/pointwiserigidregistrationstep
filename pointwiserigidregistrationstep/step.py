@@ -89,7 +89,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         '''
         print 'points to sample:', self._config['Points to Sample']
         # Put your execute step code here before calling the '_doneExecution' method.
-        if self._config['UI Mode']=='True':
+        if self._config['UI Mode']:
             self._widget = MayaviRegistrationViewerWidget(self.sourceData, self.targetData, self._config, self._register, sorted(regMethods.keys()))
             # self._widget._ui.registerButton.clicked.connect(self._register)
             self._widget._ui.acceptButton.clicked.connect(self._doneExecution)
@@ -97,8 +97,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
             self._widget._ui.resetButton.clicked.connect(self._reset)
             self._widget.setModal(True)
             self._setCurrentWidget(self._widget)
-
-        elif self._config['UI Mode']=='False':
+        else:
             self._register()
             self._doneExecution()
 
@@ -189,7 +188,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         then set:
             self._configured = True
         '''
-        dlg = ConfigureDialog()
+        dlg = ConfigureDialog(sorted(regMethods.keys()))
         dlg.identifierOccursCount = self._identifierOccursCount
         dlg.setConfig(self._config)
         dlg.validate()
@@ -246,7 +245,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         conf = QtCore.QSettings(configuration_file, QtCore.QSettings.IniFormat)
         conf.beginGroup('config')
         self._config['identifier'] = conf.value('identifier', '')
-        self._config['UI Mode'] = conf.value('UI Mode', 'True')
+        self._config['UI Mode'] = conf.value('UI Mode', True)
         self._config['Registration Method'] = conf.value('Registration Method', 'Correspondent Rigid')
         self._config['Min Relative Error'] = conf.value('Min Relative Error', '1e-3')
         self._config['Points to Sample'] = conf.value('Points to Sample', '1000')
@@ -255,7 +254,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._config['Init Scale'] = conf.value('Init Scale', '1.0')
         conf.endGroup()
 
-        d = ConfigureDialog()
+        d = ConfigureDialog(sorted(regMethods.keys()))
         d.identifierOccursCount = self._identifierOccursCount
         d.setConfig(self._config)
         self._configured = d.validate()

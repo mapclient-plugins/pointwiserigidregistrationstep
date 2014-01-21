@@ -21,6 +21,7 @@ import os
 os.environ['ETS_TOOLKIT'] = 'qt4'
 
 from PySide.QtGui import QDialog, QFileDialog, QDialogButtonBox, QAbstractItemView, QTableWidgetItem
+from PySide.QtGui import QDoubleValidator, QIntValidator
 from PySide.QtCore import Qt
 
 from pointwiserigidregistrationstep.ui_mayaviregistrationviewerwidget import Ui_Dialog
@@ -67,6 +68,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._objects.addObject('target', MayaviViewerDataPoints('target', self._targetData, renderArgs=self._targetRenderArgs))
         self._objects.addObject('registered', MayaviViewerDataPoints('registered', self._sourceData, renderArgs=self._registeredRenderArgs))
 
+        self._setupGui()
         self._makeConnections()
         self._initialiseObjectTable()
         self._initialiseSettings()
@@ -75,6 +77,17 @@ class MayaviRegistrationViewerWidget(QDialog):
         # self.testPlot()
         # self.drawObjects()
         print 'finished init...', self._config
+
+    def _setupGui(self):
+        self._ui.samplesLineEdit.setValidator(QIntValidator())
+        self._ui.xtolLineEdit.setValidator(QDoubleValidator())
+        self._ui.initTransXLineEdit.setValidator(QDoubleValidator())
+        self._ui.initTransYLineEdit.setValidator(QDoubleValidator())
+        self._ui.initTransZLineEdit.setValidator(QDoubleValidator())
+        self._ui.initRotXLineEdit.setValidator(QDoubleValidator())
+        self._ui.initRotYLineEdit.setValidator(QDoubleValidator())
+        self._ui.initRotZLineEdit.setValidator(QDoubleValidator())
+        self._ui.initScaleLineEdit.setValidator(QDoubleValidator())
 
     def _makeConnections(self):
         self._ui.tableWidget.itemClicked.connect(self._tableItemClicked)

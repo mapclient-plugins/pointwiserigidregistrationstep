@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ConfigureDialog</string>
+   <string>Configure Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
@@ -20,6 +20,9 @@
       <string/>
      </property>
      <layout class="QFormLayout" name="formLayout">
+      <property name="fieldGrowthPolicy">
+       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+      </property>
       <item row="0" column="0">
        <widget class="QLabel" name="label0">
         <property name="text">
@@ -38,7 +41,14 @@
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QLineEdit" name="lineEdit1"/>
+       <widget class="QCheckBox" name="UICheckBox">
+        <property name="text">
+         <string/>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label2">
@@ -48,7 +58,7 @@
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="lineEdit2"/>
+       <widget class="QComboBox" name="regMethodsComboBox"/>
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="label3">
@@ -58,7 +68,7 @@
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QLineEdit" name="lineEdit3"/>
+       <widget class="QLineEdit" name="xtolLineEdit"/>
       </item>
       <item row="4" column="0">
        <widget class="QLabel" name="label4">
@@ -68,16 +78,11 @@
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QLineEdit" name="lineEdit4"/>
-      </item>
-      <item row="5" column="1">
-       <widget class="QLineEdit" name="lineEdit5"/>
-      </item>
-      <item row="6" column="1">
-       <widget class="QLineEdit" name="lineEdit6"/>
-      </item>
-      <item row="7" column="1">
-       <widget class="QLineEdit" name="lineEdit7"/>
+       <widget class="QLineEdit" name="sampleLineEdit">
+        <property name="inputMask">
+         <string/>
+        </property>
+       </widget>
       </item>
       <item row="5" column="0">
        <widget class="QLabel" name="label">
@@ -99,6 +104,77 @@
          <string>Initial Scale:</string>
         </property>
        </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QLineEdit" name="sLineEdit"/>
+      </item>
+      <item row="5" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>x</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="txLineEdit"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>y</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="tyLineEdit"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>z</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="tzLineEdit"/>
+        </item>
+       </layout>
+      </item>
+      <item row="6" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>x</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="rxLineEdit"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>y</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="ryLineEdit"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>z</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="rzLineEdit"/>
+        </item>
+       </layout>
       </item>
      </layout>
     </widget>
