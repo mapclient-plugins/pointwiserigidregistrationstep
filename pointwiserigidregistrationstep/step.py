@@ -13,6 +13,7 @@ from pointwiserigidregistrationstep.mayaviregistrationviewerwidget import Mayavi
 from mappluginutils.datatypes import transformations as T
 
 import numpy as np
+import time
 
 regMethods = {
               'Correspondent Rigid': AF.fitRigid,
@@ -87,8 +88,10 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         print 'points to sample:', self._config['Points to Sample']
         # Put your execute step code here before calling the '_doneExecution' method.
         if self._config['UI Mode']:
-            self._widget = MayaviRegistrationViewerWidget(self.sourceData, self.targetData, self._config, self._register, sorted(regMethods.keys()))
-            # self._widget._ui.registerButton.clicked.connect(self._register)
+            self._widget = MayaviRegistrationViewerWidget(
+                            self.sourceData, self.targetData, self._config,
+                            self._register, sorted(regMethods.keys())
+                            )
             self._widget._ui.acceptButton.clicked.connect(self._doneExecution)
             self._widget._ui.abortButton.clicked.connect(self._abort)
             self._widget._ui.resetButton.clicked.connect(self._reset)
@@ -139,6 +142,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         print 'Registered...'
         print 'RMSE:', self.RMSE
         print 'T:', T
+        # time.sleep(3)
         return self.transform, self.sourceDataAligned, self.RMSE
 
     def _abort(self):
@@ -221,13 +225,16 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         conf = QtCore.QSettings(configuration_file, QtCore.QSettings.IniFormat)
         conf.beginGroup('config')
         conf.setValue('identifier', self._config['identifier'])
-        conf.setValue('UI Mode', self._config['UI Mode'])
         conf.setValue('Registration Method', self._config['Registration Method'])
         conf.setValue('Min Relative Error', self._config['Min Relative Error'])
         conf.setValue('Points to Sample', self._config['Points to Sample'])
         conf.setValue('Init Trans', self._config['Init Trans'])
         conf.setValue('Init Rot', self._config['Init Rot'])
         conf.setValue('Init Scale', self._config['Init Scale'])
+        if self._config['UI Mode']:
+            conf.setValue('UI Mode', 'True')
+        else:
+            conf.setValue('UI Mode', 'False')
         conf.endGroup()
 
 
@@ -242,13 +249,16 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         conf = QtCore.QSettings(configuration_file, QtCore.QSettings.IniFormat)
         conf.beginGroup('config')
         self._config['identifier'] = conf.value('identifier', '')
-        self._config['UI Mode'] = conf.value('UI Mode', True)
         self._config['Registration Method'] = conf.value('Registration Method', 'Correspondent Rigid')
         self._config['Min Relative Error'] = conf.value('Min Relative Error', '1e-3')
         self._config['Points to Sample'] = conf.value('Points to Sample', '1000')
         self._config['Init Trans'] = conf.value('Init Trans', '[0,0,0]')
         self._config['Init Rot'] = conf.value('Init Rot', '[0,0,0]')
         self._config['Init Scale'] = conf.value('Init Scale', '1.0')
+        if conf.value('UI Mode')=='True':
+            self._config['UI Mode'] = True
+        elif conf.value('UI Mode')=='False':
+            self._config['UI Mode'] = False
         conf.endGroup()
 
         d = ConfigureDialog(sorted(regMethods.keys()))

@@ -23,12 +23,24 @@ os.environ['ETS_TOOLKIT'] = 'qt4'
 from PySide.QtGui import QDialog, QFileDialog, QDialogButtonBox, QAbstractItemView, QTableWidgetItem
 from PySide.QtGui import QDoubleValidator, QIntValidator
 from PySide.QtCore import Qt
+from PySide.QtCore import QThread, Signal
 
 from pointwiserigidregistrationstep.ui_mayaviregistrationviewerwidget import Ui_Dialog
 from traits.api import HasTraits, Instance, on_trait_change, \
     Int, Dict
 
 from mappluginutils.mayaviviewer import MayaviViewerObjectsContainer, MayaviViewerDataPoints, colours
+
+class _ExecThread(QThread):
+    update = Signal(tuple)
+
+    def __init__(self, func):
+        QThread.__init__(self)
+        self.func = func
+
+    def run(self):
+        output = self.func()
+        self.update.emit(output)
 
 class MayaviRegistrationViewerWidget(QDialog):
     '''
@@ -59,6 +71,9 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._registerFunc = registerFunc
         self._regMethods = regMethods
         self._config = config
+
+        self._worker = _ExecThread(self._registerFunc)
+        self._worker.update.connect(self._regUpdate)
 
         # print 'init...', self._config
 
@@ -93,7 +108,12 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._ui.tableWidget.itemClicked.connect(self._tableItemClicked)
         self._ui.tableWidget.itemChanged.connect(self._visibleBoxChanged)
         self._ui.screenshotSaveButton.clicked.connect(self._saveScreenShot)
-        self._ui.registerButton.clicked.connect(self._register)
+        
+        # clicking register spawns a thread, need to lock parts of ui
+        self._ui.registerButton.clicked.connect(self._worker.start)
+        self._ui.registerButton.clicked.connect(self._regLockUI)
+        
+
         self._ui.resetButton.clicked.connect(self._reset)
         self._ui.abortButton.clicked.connect(self._abort)
         self._ui.acceptButton.clicked.connect(self._accept)
@@ -225,24 +245,52 @@ class MayaviRegistrationViewerWidget(QDialog):
     def _updateInitScale(self):
         self._config['Init Scale'] = self._ui.initScaleLineEdit.text()
 
-    def _register(self):
-        transform, self._registeredData, RMSE = self._registerFunc()
-        # registeredObj = MayaviViewerDataPoints('registered', self._registeredData, renderArgs=self._registeredRenderArgs)
-        # self._objects.addObject('registered', registeredObj)
-        # self._addObjectToTable(2, 'registered', registeredObj)
-        # print 'added registered data points'
-        # self._ui.tableWidget.resizeColumnToContents(self.objectTableHeaderColumns['visible'])
-        # self._ui.tableWidget.resizeColumnToContents(self.objectTableHeaderColumns['type'])
-        # print 'table items added'
-
+    def _regUpdate(self, regOutput):
         # update registered datacloud
+        transform, regData, rmse = regOutput
+        self._registeredData = regData
         regObj = self._objects.getObject('registered')
         regObj.updateGeometry(self._registeredData, self._scene)
         regTableItem = self._ui.tableWidget.item(2, self.objectTableHeaderColumns['visible'])
         regTableItem.setCheckState(Qt.Checked)
 
         # update error fields
-        self._ui.RMSELineEdit.setText(str(RMSE))
+        self._ui.RMSELineEdit.setText(str(rmse))
+
+        # unlock reg ui
+        self._regUnlockUI()
+
+    def _regLockUI(self):
+        self._ui.regMethodsComboBox.setEnabled(False)
+        self._ui.xtolLineEdit.setEnabled(False)
+        self._ui.samplesLineEdit.setEnabled(False)
+        self._ui.initTransXLineEdit.setEnabled(False)
+        self._ui.initTransYLineEdit.setEnabled(False)
+        self._ui.initTransZLineEdit.setEnabled(False)
+        self._ui.initRotXLineEdit.setEnabled(False)
+        self._ui.initRotYLineEdit.setEnabled(False)
+        self._ui.initRotZLineEdit.setEnabled(False)
+        self._ui.initScaleLineEdit.setEnabled(False)
+        self._ui.registerButton.setEnabled(False)
+        self._ui.resetButton.setEnabled(False)
+        self._ui.acceptButton.setEnabled(False)
+        self._ui.abortButton.setEnabled(False)
+
+    def _regUnlockUI(self):
+        self._ui.regMethodsComboBox.setEnabled(True)
+        self._ui.xtolLineEdit.setEnabled(True)
+        self._ui.samplesLineEdit.setEnabled(True)
+        self._ui.initTransXLineEdit.setEnabled(True)
+        self._ui.initTransYLineEdit.setEnabled(True)
+        self._ui.initTransZLineEdit.setEnabled(True)
+        self._ui.initRotXLineEdit.setEnabled(True)
+        self._ui.initRotYLineEdit.setEnabled(True)
+        self._ui.initRotZLineEdit.setEnabled(True)
+        self._ui.initScaleLineEdit.setEnabled(True)
+        self._ui.registerButton.setEnabled(True)
+        self._ui.resetButton.setEnabled(True)
+        self._ui.acceptButton.setEnabled(True)
+        self._ui.abortButton.setEnabled(True)
 
     def _reset(self):
         # delete viewer table row
