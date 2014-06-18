@@ -90,8 +90,10 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         print 'points to sample:', self._config['Points to Sample']
         # Put your execute step code here before calling the '_doneExecution' method.
         if self._config['UI Mode']:
-            self._widget = MayaviRegistrationViewerWidget(self.sourceData, self.targetData, self._config, self._register, sorted(regMethods.keys()))
-            # self._widget._ui.registerButton.clicked.connect(self._register)
+            self._widget = MayaviRegistrationViewerWidget(
+                            self.sourceData, self.targetData, self._config,
+                            self._register, sorted(regMethods.keys())
+                            )
             self._widget._ui.acceptButton.clicked.connect(self._doneExecution)
             self._widget._ui.abortButton.clicked.connect(self._abort)
             self._widget._ui.resetButton.clicked.connect(self._reset)
