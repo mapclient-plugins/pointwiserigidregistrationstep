@@ -25,7 +25,7 @@ from PySide.QtGui import QDoubleValidator, QIntValidator
 from PySide.QtCore import Qt
 from PySide.QtCore import QThread, Signal
 
-from pointwiserigidregistrationstep.ui_mayaviregistrationviewerwidget import Ui_Dialog
+from mapclientplugins.pointwiserigidregistrationstep.ui_mayaviregistrationviewerwidget import Ui_Dialog
 from traits.api import HasTraits, Instance, on_trait_change, \
     Int, Dict
 
