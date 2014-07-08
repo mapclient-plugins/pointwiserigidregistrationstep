@@ -48,6 +48,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._configured = False # A step cannot be executed until it has been configured.
         self._category = 'Registration'
         # Add any other initialisation code here:
+        self._icon = QtGui.QImage(':/pointwiserigidregistrationstep/images/pointwiserigidregicon.png')
         # Ports:
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#uses',
