@@ -1,0 +1,6 @@
+
+<RCC>
+  <qresource prefix="pointwiserigidregistrationstep">
+    <file>images/pointwiserigidregicon.png</file>
+  </qresource>
+</RCC>

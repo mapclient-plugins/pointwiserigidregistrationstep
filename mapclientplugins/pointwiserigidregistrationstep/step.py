@@ -5,11 +5,11 @@ MAP Client Plugin Step
 import os
 from PySide import QtCore
 
-from mountpoints.workflowstep import WorkflowStepMountPoint
-from pointwiserigidregistrationstep.configuredialog import ConfigureDialog
+from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
+from mapclientplugins.pointwiserigidregistrationstep.configuredialog import ConfigureDialog
 
 from gias.common import alignment_fitting as AF
-from pointwiserigidregistrationstep.mayaviregistrationviewerwidget import MayaviRegistrationViewerWidget
+from mapclientplugins.pointwiserigidregistrationstep.mayaviregistrationviewerwidget import MayaviRegistrationViewerWidget
 from mappluginutils.datatypes import transformations as T
 
 import numpy as np
@@ -45,6 +45,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._configured = False # A step cannot be executed until it has been configured.
         self._category = 'Registration'
         # Add any other initialisation code here:
+        self._icon = QtGui.QImage(':/pointwiserigidregistrationstep/images/pointwiserigidregicon.png')
         # Ports:
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#uses',
@@ -161,9 +162,9 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         uses port for this step then the index can be ignored.
         '''
         if index == 0:
-            self.sourceData = dataIn # ju#pointcloud
+            self.sourceData = np.array(dataIn, dtype=float) # ju#pointcloud
         else:
-            self.targetData = dataIn # ju#pointcloud
+            self.targetData = np.array(dataIn, dtype=float) # ju#pointcloud
 
     def getPortData(self, index):
         '''
