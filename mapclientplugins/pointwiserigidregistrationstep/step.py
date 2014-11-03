@@ -3,8 +3,6 @@
 MAP Client Plugin Step
 '''
 import os
-
-from PySide import QtGui
 from PySide import QtCore
 
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
@@ -39,8 +37,7 @@ regMethodTransforms = {
 
 class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
     '''
-    Skeleton step which is intended to be a helpful starting point
-    for new steps.
+    Step for rigid-body and scaling registration of 2 point clouds.
     '''
 
     def __init__(self, location):
