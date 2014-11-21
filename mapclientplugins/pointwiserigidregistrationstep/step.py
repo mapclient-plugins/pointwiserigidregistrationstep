@@ -50,16 +50,16 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         # Ports:
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#uses',
-                      'ju#pointcoordinates'))
+                      'http://physiomeproject.org/workflow/1.0/rdf-schema#pointcloud'))
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#uses',
-                      'ju#pointcoordinates'))
+                      'http://physiomeproject.org/workflow/1.0/rdf-schema#pointcloud'))
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#provides',
-                      'ju#pointcoordinates'))
+                      'http://physiomeproject.org/workflow/1.0/rdf-schema#pointcloud'))
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#provides',
-                      'ju#geometrictransform'))
+                      'http://physiomeproject.org/workflow/1.0/rdf-schema#geometrictransform'))
         self.addPort(('http://physiomeproject.org/workflow/1.0/rdf-schema#port',
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#provides',
                       'float'))
