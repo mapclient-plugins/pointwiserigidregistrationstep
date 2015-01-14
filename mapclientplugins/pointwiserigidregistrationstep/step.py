@@ -87,7 +87,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         Make sure you call the _doneExecution() method when finished.  This method
         may be connected up to a button in a widget for example.
         '''
-        print 'points to sample:', self._config['Points to Sample']
+        print('points to sample:', self._config['Points to Sample'])
         # Put your execute step code here before calling the '_doneExecution' method.
         if self._config['UI Mode']:
             self._widget = MayaviRegistrationViewerWidget(
@@ -112,7 +112,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         if t0==[0,0,0]:
             t0 = self.targetData.mean(0) - self.sourceData.mean(0)
 
-        print 't0, r0, s0:', t0, r0, s0
+        print('t0, r0, s0:', t0, r0, s0)
 
         reg = self._config['Registration Method']
         if reg=='Correspondent Affine':
@@ -130,7 +130,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         xtol = float(self._config['Min Relative Error'])
         samples = int(self._config['Points to Sample'])
         x0 = self._makeX0()
-        print 'T0:', x0
+        print('T0:', x0)
         if x0==None:
             T, self.sourceDataAligned,\
             (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, xtol=xtol, 
@@ -141,15 +141,15 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
                                      sample=samples, outputErrors=True)
 
         self.transform = regMethodTransforms[self._config['Registration Method']](T)
-        print 'Registered...'
-        print 'RMSE:', self.RMSE
-        print 'T:', T
+        print('Registered...')
+        print('RMSE:', self.RMSE)
+        print('T:', T)
         # time.sleep(3)
         return self.transform, self.sourceDataAligned, self.RMSE
 
     def _abort(self):
         # self._doneExecution()
-        raise RuntimeError, 'registration aborted'
+        raise RuntimeError('registration aborted')
 
     def _reset(self):
         self.sourceDataAligned = None

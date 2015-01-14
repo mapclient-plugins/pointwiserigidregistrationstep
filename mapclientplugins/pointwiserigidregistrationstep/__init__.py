@@ -19,5 +19,8 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
 """
 __version__ = '0.1.0'
 __author__ = 'Ju Zhang'
+__stepname__ = 'Point-wise Rigid Registration'
+__location__ = 'https://github.com/mapclient-plugins/pointwiserigidregistrationstep/archive/master.zip'
+
 from mapclientplugins.pointwiserigidregistrationstep import step
 import mapclientplugins.pointwiserigidregistrationstep.resources_rc

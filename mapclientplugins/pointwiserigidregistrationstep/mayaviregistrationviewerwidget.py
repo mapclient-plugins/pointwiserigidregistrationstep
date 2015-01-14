@@ -91,7 +91,7 @@ class MayaviRegistrationViewerWidget(QDialog):
 
         # self.testPlot()
         # self.drawObjects()
-        print 'finished init...', self._config
+        print('finished init...', self._config)
 
     def _setupGui(self):
         self._ui.samplesLineEdit.setValidator(QIntValidator())
@@ -172,8 +172,8 @@ class MayaviRegistrationViewerWidget(QDialog):
 
     def _addObjectToTable(self, row, name, obj, checked=True):
         typeName = obj.typeName
-        print typeName
-        print name
+        print(typeName)
+        print(name)
         tableItem = QTableWidgetItem(name)
         if checked:
             tableItem.setCheckState(Qt.Checked)
@@ -187,8 +187,8 @@ class MayaviRegistrationViewerWidget(QDialog):
         selectedRow = self._ui.tableWidget.currentRow()
         self.selectedObjectName = self._ui.tableWidget.item(selectedRow, self.objectTableHeaderColumns['visible']).text()
         self._populateScalarsDropDown(self.selectedObjectName)
-        print selectedRow
-        print self.selectedObjectName
+        print(selectedRow)
+        print(self.selectedObjectName)
 
     def _visibleBoxChanged(self, tableItem):
         # get name of object selected
@@ -200,17 +200,17 @@ class MayaviRegistrationViewerWidget(QDialog):
             name = tableItem.text()
             visible = tableItem.checkState().name=='Checked'
 
-            print 'visibleboxchanged name', name
-            print 'visibleboxchanged visible', visible
+            print('visibleboxchanged name', name)
+            print('visibleboxchanged visible', visible)
 
             # toggle visibility
             obj = self._objects.getObject(name)
-            print obj.name
+            print(obj.name)
             if obj.sceneObject:
-                print 'changing existing visibility'
+                print('changing existing visibility')
                 obj.setVisibility(visible)
             else:
-                print 'drawing new'
+                print('drawing new')
                 obj.draw(self._scene)
 
     def _getSelectedObjectName(self):
@@ -322,17 +322,17 @@ class MayaviRegistrationViewerWidget(QDialog):
         #     self._ui.tableWidget.removeRow(r)
 
     def _refresh(self):
-        for r in xrange(self._ui.tableWidget.rowCount()):
+        for r in range(self._ui.tableWidget.rowCount()):
             tableItem = self._ui.tableWidget.item(r, self.objectTableHeaderColumns['visible'])
             name = tableItem.text()
             visible = tableItem.checkState().name=='Checked'
             obj = self._objects.getObject(name)
-            print obj.name
+            print(obj.name)
             if obj.sceneObject:
-                print 'changing existing visibility'
+                print('changing existing visibility')
                 obj.setVisibility(visible)
             else:
-                print 'drawing new'
+                print('drawing new')
                 obj.draw(self._scene)
 
     def _saveScreenShot(self):
@@ -347,7 +347,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         # This function is called when the view is opened. We don't
         # populate the scene when the view is not yet open, as some
         # VTK features require a GLContext.
-        print 'trait_changed'
+        print('trait_changed')
 
         # We can do normal mlab calls on the embedded scene.
         self._scene.mlab.test_points3d()
