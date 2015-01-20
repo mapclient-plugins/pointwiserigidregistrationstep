@@ -27,13 +27,13 @@ regMethods = {
              }
 
 regMethodTransforms = {
-                          'Correspondent Rigid': T.RigidTransform,
-                          'Correspondent Rigid+Scale': T.RigidScaleTransform,
+                          'Correspondent Rigid': T.RigidTransformAboutPoint,
+                          'Correspondent Rigid+Scale': T.RigidScaleTransformAboutPoint,
                           'Correspondent Affine': T.AffineTransform,
-                          'ICP Rigid Source-Target': T.RigidTransform,
-                          'ICP Rigid Target-Source': T.RigidTransform,
-                          'ICP Rigid+Scale Source-Target': T.RigidScaleTransform,
-                          'ICP Rigid+Scale Target-Source': T.RigidScaleTransform,
+                          'ICP Rigid Source-Target': T.RigidTransformAboutPoint,
+                          'ICP Rigid Target-Source': T.RigidTransformAboutPoint,
+                          'ICP Rigid+Scale Source-Target': T.RigidScaleTransformAboutPoint,
+                          'ICP Rigid+Scale Target-Source': T.RigidScaleTransformAboutPoint,
                         }
 
 class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
@@ -139,8 +139,11 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
             T, self.sourceDataAligned,\
             (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, t0=x0, xtol=xtol,
                                      sample=samples, outputErrors=True)
-
+        
         self.transform = regMethodTransforms[self._config['Registration Method']](T)
+        if self._config['Registration Method']!='Correspondent Affine':
+            self.transform.setP(self.sourceData.mean(0))
+
         print('Registered...')
         print('RMSE:', self.RMSE)
         print('T:', T)
