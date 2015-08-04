@@ -178,7 +178,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         '''
         if index == 2:
             portData2 = self.sourceDataAligned # ju#pointcloud
-            return portData2
+            return portData2.tolist()
         elif index == 3:
             portData3 = self.transform # ju#rigidtransformvector
             return portData3
