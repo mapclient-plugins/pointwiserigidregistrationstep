@@ -233,17 +233,52 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._config['Points to Sample'] = self._ui.samplesLineEdit.text()
 
     def _updateInitTrans(self):
-        self._config['Init Trans'] = '[' + self._ui.initTransXLineEdit.text() + ','\
-                                         + self._ui.initTransYLineEdit.text() + ','\
-                                         + self._ui.initTransZLineEdit.text() + ']'
+        xText = self._ui.initTransXLineEdit.text()
+        if xText=='':
+            xText = '0'
+            self._ui.initTransXLineEdit.setText(xText)
+
+        yText = self._ui.initTransYLineEdit.text()
+        if yText=='':
+            yText = '0'
+            self._ui.initTransYLineEdit.setText(yText)
+
+        zText = self._ui.initTransZLineEdit.text()
+        if zText=='':
+            zText = '0'
+            self._ui.initTransZLineEdit.setText(zText)
+
+        self._config['Init Trans'] = '[' + xText + ','\
+                                         + yText + ','\
+                                         + zText + ']'
 
     def _updateInitRot(self):
-        self._config['Init Rot'] = '[' + self._ui.initRotXLineEdit.text() + ','\
-                                       + self._ui.initRotYLineEdit.text() + ','\
-                                       + self._ui.initRotZLineEdit.text() + ']'
+        xText = self._ui.initRotXLineEdit.text()
+        if xText=='':
+            xText = '0'
+            self._ui.initRotXLineEdit.setText(xText)
+
+        yText = self._ui.initRotYLineEdit.text()
+        if yText=='':
+            yText = '0'
+            self._ui.initRotYLineEdit.setText(yText)
+
+        zText = self._ui.initRotZLineEdit.text()
+        if zText=='':
+            zText = '0'
+            self._ui.initRotZLineEdit.setText(zText)
+
+        self._config['Init Rot'] = '[' + xText + ','\
+                                       + yText + ','\
+                                       + zText + ']'
 
     def _updateInitScale(self):
-        self._config['Init Scale'] = self._ui.initScaleLineEdit.text()
+        sText = self._ui.initScaleLineEdit.text()
+        if sText=='':
+            sText = 1.0
+            self._ui.initScaleLineEdit.setText(sText)
+
+        self._config['Init Scale'] = sText
 
     def _regUpdate(self, regOutput):
         # update registered datacloud

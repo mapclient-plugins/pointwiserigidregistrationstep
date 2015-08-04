@@ -50,6 +50,32 @@ class ConfigureDialog(QtGui.QDialog):
     def _makeConnections(self):
         self._ui.lineEdit0.textChanged.connect(self.validate)
 
+        self._ui.txLineEdit.textChanged.connect(self._fieldsUpdated)
+        self._ui.tyLineEdit.textChanged.connect(self._fieldsUpdated)
+        self._ui.tzLineEdit.textChanged.connect(self._fieldsUpdated)
+
+        self._ui.rxLineEdit.textChanged.connect(self._fieldsUpdated)
+        self._ui.ryLineEdit.textChanged.connect(self._fieldsUpdated)
+        self._ui.rzLineEdit.textChanged.connect(self._fieldsUpdated)
+
+        self._ui.sLineEdit.textChanged.connect(self._fieldsUpdated)
+
+    def _fieldsUpdated(self):
+        if self._ui.txLineEdit.text()=='':
+            self._ui.txLineEdit.setText('0')
+        if self._ui.tyLineEdit.text()=='':
+            self._ui.tyLineEdit.setText('0')
+        if self._ui.tzLineEdit.text()=='':
+            self._ui.tzLineEdit.setText('0')
+        if self._ui.rxLineEdit.text()=='':
+            self._ui.rxLineEdit.setText('0')
+        if self._ui.ryLineEdit.text()=='':
+            self._ui.ryLineEdit.setText('0')
+        if self._ui.rzLineEdit.text()=='':
+            self._ui.rzLineEdit.setText('0')
+        if self._ui.sLineEdit.text()=='':
+            self._ui.sLineEdit.setText('1.0')
+
     def accept(self):
         '''
         Override the accept method so that we can confirm saving an
