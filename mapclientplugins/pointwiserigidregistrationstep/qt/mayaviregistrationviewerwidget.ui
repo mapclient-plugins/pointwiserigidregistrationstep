@@ -148,22 +148,6 @@
              <item row="4" column="1">
               <layout class="QHBoxLayout" name="initRotLayout">
                <item>
-                <widget class="QLineEdit" name="initRotZLineEdit">
-                 <property name="maximumSize">
-                  <size>
-                   <width>50</width>
-                   <height>16777215</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>0</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item>
                 <widget class="QLineEdit" name="initRotXLineEdit">
                  <property name="maximumSize">
                   <size>
@@ -181,6 +165,22 @@
                </item>
                <item>
                 <widget class="QLineEdit" name="initRotYLineEdit">
+                 <property name="maximumSize">
+                  <size>
+                   <width>50</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="initRotZLineEdit">
                  <property name="maximumSize">
                   <size>
                    <width>50</width>
@@ -511,6 +511,30 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>tableWidget</tabstop>
+  <tabstop>regMethodsComboBox</tabstop>
+  <tabstop>xtolLineEdit</tabstop>
+  <tabstop>samplesLineEdit</tabstop>
+  <tabstop>initTransXLineEdit</tabstop>
+  <tabstop>initTransYLineEdit</tabstop>
+  <tabstop>initTransZLineEdit</tabstop>
+  <tabstop>initRotXLineEdit</tabstop>
+  <tabstop>initRotYLineEdit</tabstop>
+  <tabstop>initRotZLineEdit</tabstop>
+  <tabstop>initScaleLineEdit</tabstop>
+  <tabstop>registerButton</tabstop>
+  <tabstop>resetButton</tabstop>
+  <tabstop>abortButton</tabstop>
+  <tabstop>acceptButton</tabstop>
+  <tabstop>RMSELineEdit</tabstop>
+  <tabstop>meanErrorLineEdit</tabstop>
+  <tabstop>SDLineEdit</tabstop>
+  <tabstop>screenshotPixelXLineEdit</tabstop>
+  <tabstop>screenshotPixelYLineEdit</tabstop>
+  <tabstop>screenshotFilenameLineEdit</tabstop>
+  <tabstop>screenshotSaveButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

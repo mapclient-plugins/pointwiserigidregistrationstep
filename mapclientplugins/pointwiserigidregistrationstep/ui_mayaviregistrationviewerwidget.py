@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'mayaviregistrationviewerwidget.ui'
+# Form implementation generated from reading ui file 'qt/mayaviregistrationviewerwidget.ui'
 #
-# Created: Wed Jan 15 18:30:09 2014
-#      by: pyside-uic 0.2.13 running on PySide 1.1.0
+# Created: Tue Aug  4 14:35:32 2015
+#      by: pyside-uic 0.2.15 running on PySide 1.2.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -89,11 +89,6 @@ class Ui_Dialog(object):
         self.formLayout_2.setWidget(4, QtGui.QFormLayout.LabelRole, self.label_5)
         self.initRotLayout = QtGui.QHBoxLayout()
         self.initRotLayout.setObjectName("initRotLayout")
-        self.initRotZLineEdit = QtGui.QLineEdit(self.widget1)
-        self.initRotZLineEdit.setMaximumSize(QtCore.QSize(50, 16777215))
-        self.initRotZLineEdit.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.initRotZLineEdit.setObjectName("initRotZLineEdit")
-        self.initRotLayout.addWidget(self.initRotZLineEdit)
         self.initRotXLineEdit = QtGui.QLineEdit(self.widget1)
         self.initRotXLineEdit.setMaximumSize(QtCore.QSize(50, 16777215))
         self.initRotXLineEdit.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
@@ -104,6 +99,11 @@ class Ui_Dialog(object):
         self.initRotYLineEdit.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.initRotYLineEdit.setObjectName("initRotYLineEdit")
         self.initRotLayout.addWidget(self.initRotYLineEdit)
+        self.initRotZLineEdit = QtGui.QLineEdit(self.widget1)
+        self.initRotZLineEdit.setMaximumSize(QtCore.QSize(50, 16777215))
+        self.initRotZLineEdit.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.initRotZLineEdit.setObjectName("initRotZLineEdit")
+        self.initRotLayout.addWidget(self.initRotZLineEdit)
         self.formLayout_2.setLayout(4, QtGui.QFormLayout.FieldRole, self.initRotLayout)
         self.initTransLayout = QtGui.QHBoxLayout()
         self.initTransLayout.setObjectName("initTransLayout")
@@ -255,6 +255,27 @@ class Ui_Dialog(object):
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
+        Dialog.setTabOrder(self.tableWidget, self.regMethodsComboBox)
+        Dialog.setTabOrder(self.regMethodsComboBox, self.xtolLineEdit)
+        Dialog.setTabOrder(self.xtolLineEdit, self.samplesLineEdit)
+        Dialog.setTabOrder(self.samplesLineEdit, self.initTransXLineEdit)
+        Dialog.setTabOrder(self.initTransXLineEdit, self.initTransYLineEdit)
+        Dialog.setTabOrder(self.initTransYLineEdit, self.initTransZLineEdit)
+        Dialog.setTabOrder(self.initTransZLineEdit, self.initRotXLineEdit)
+        Dialog.setTabOrder(self.initRotXLineEdit, self.initRotYLineEdit)
+        Dialog.setTabOrder(self.initRotYLineEdit, self.initRotZLineEdit)
+        Dialog.setTabOrder(self.initRotZLineEdit, self.initScaleLineEdit)
+        Dialog.setTabOrder(self.initScaleLineEdit, self.registerButton)
+        Dialog.setTabOrder(self.registerButton, self.resetButton)
+        Dialog.setTabOrder(self.resetButton, self.abortButton)
+        Dialog.setTabOrder(self.abortButton, self.acceptButton)
+        Dialog.setTabOrder(self.acceptButton, self.RMSELineEdit)
+        Dialog.setTabOrder(self.RMSELineEdit, self.meanErrorLineEdit)
+        Dialog.setTabOrder(self.meanErrorLineEdit, self.SDLineEdit)
+        Dialog.setTabOrder(self.SDLineEdit, self.screenshotPixelXLineEdit)
+        Dialog.setTabOrder(self.screenshotPixelXLineEdit, self.screenshotPixelYLineEdit)
+        Dialog.setTabOrder(self.screenshotPixelYLineEdit, self.screenshotFilenameLineEdit)
+        Dialog.setTabOrder(self.screenshotFilenameLineEdit, self.screenshotSaveButton)
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Point to Point Registration", None, QtGui.QApplication.UnicodeUTF8))
@@ -266,9 +287,9 @@ class Ui_Dialog(object):
         self.label.setText(QtGui.QApplication.translate("Dialog", "Samples:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("Dialog", "Init. Trans.:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_5.setText(QtGui.QApplication.translate("Dialog", "Init. Rot.:", None, QtGui.QApplication.UnicodeUTF8))
-        self.initRotZLineEdit.setText(QtGui.QApplication.translate("Dialog", "0", None, QtGui.QApplication.UnicodeUTF8))
         self.initRotXLineEdit.setText(QtGui.QApplication.translate("Dialog", "0", None, QtGui.QApplication.UnicodeUTF8))
         self.initRotYLineEdit.setText(QtGui.QApplication.translate("Dialog", "0", None, QtGui.QApplication.UnicodeUTF8))
+        self.initRotZLineEdit.setText(QtGui.QApplication.translate("Dialog", "0", None, QtGui.QApplication.UnicodeUTF8))
         self.initTransXLineEdit.setText(QtGui.QApplication.translate("Dialog", "0", None, QtGui.QApplication.UnicodeUTF8))
         self.initTransYLineEdit.setText(QtGui.QApplication.translate("Dialog", "0", None, QtGui.QApplication.UnicodeUTF8))
         self.initTransZLineEdit.setText(QtGui.QApplication.translate("Dialog", "0", None, QtGui.QApplication.UnicodeUTF8))
@@ -291,4 +312,4 @@ class Ui_Dialog(object):
         self.screenshotFilenameLineEdit.setText(QtGui.QApplication.translate("Dialog", "screenshot.png", None, QtGui.QApplication.UnicodeUTF8))
         self.screenshotSaveButton.setText(QtGui.QApplication.translate("Dialog", "Save Screenshot", None, QtGui.QApplication.UnicodeUTF8))
 
-from mappluginutils.mayaviviewer import MayaviSceneWidget
+from mayaviscenewidget import MayaviSceneWidget
