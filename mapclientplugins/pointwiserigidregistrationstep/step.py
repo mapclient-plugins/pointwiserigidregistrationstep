@@ -9,9 +9,9 @@ import json
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclientplugins.pointwiserigidregistrationstep.configuredialog import ConfigureDialog
 
-from gias.common import alignment_fitting as AF
+from gias2.registration import alignment_fitting as AF
 from mapclientplugins.pointwiserigidregistrationstep.mayaviregistrationviewerwidget import MayaviRegistrationViewerWidget
-from mappluginutils.datatypes import transformations as T
+from gias2.mappluginutils.datatypes import transformations as T
 
 import numpy as np
 import time

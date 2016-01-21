@@ -29,7 +29,7 @@ from mapclientplugins.pointwiserigidregistrationstep.ui_mayaviregistrationviewer
 from traits.api import HasTraits, Instance, on_trait_change, \
     Int, Dict
 
-from mappluginutils.mayaviviewer import MayaviViewerObjectsContainer, MayaviViewerDataPoints, colours
+from gias2.mappluginutils.mayaviviewer import MayaviViewerObjectsContainer, MayaviViewerDataPoints, colours
 
 class _ExecThread(QThread):
     update = Signal(tuple)
