@@ -4,7 +4,7 @@ MAP Client Plugin Step
 '''
 import os
 from PySide import QtGui
-from PySide import QtCore
+import json
 
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclientplugins.pointwiserigidregistrationstep.configuredialog import ConfigureDialog
@@ -65,7 +65,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
                       'python#float'))
         self._config = {}
         self._config['identifier'] = ''
-        self._config['UI Mode'] = 'True'
+        self._config['UI Mode'] = True
         self._config['Registration Method'] = 'Correspondent Affine'
         self._config['Min Relative Error'] = '1e-3'
         self._config['Points to Sample'] = '1000'
@@ -218,55 +218,21 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         '''
         self._config['identifier'] = identifier
 
-    def serialize(self, location):
+    def serialize(self):
         '''
-        Add code to serialize this step to disk.  The filename should
-        use the step identifier (received from getIdentifier()) to keep it
-        unique within the workflow.  The suggested name for the file on
-        disk is:
-            filename = getIdentifier() + '.conf'
+        Add code to serialize this step to disk. Returns a json string for
+        mapclient to serialise.
         '''
-        configuration_file = os.path.join(location, self.getIdentifier() + '.conf')
-        conf = QtCore.QSettings(configuration_file, QtCore.QSettings.IniFormat)
-        conf.beginGroup('config')
-        conf.setValue('identifier', self._config['identifier'])
-        conf.setValue('Registration Method', self._config['Registration Method'])
-        conf.setValue('Min Relative Error', self._config['Min Relative Error'])
-        conf.setValue('Points to Sample', self._config['Points to Sample'])
-        conf.setValue('Init Trans', self._config['Init Trans'])
-        conf.setValue('Init Rot', self._config['Init Rot'])
-        conf.setValue('Init Scale', self._config['Init Scale'])
-        if self._config['UI Mode']:
-            conf.setValue('UI Mode', 'True')
-        else:
-            conf.setValue('UI Mode', 'False')
-        conf.endGroup()
+        return json.dumps(self._config, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
-
-    def deserialize(self, location):
+    def deserialize(self, string):
         '''
-        Add code to deserialize this step from disk.  As with the serialize 
-        method the filename should use the step identifier.  Obviously the 
-        filename used here should be the same as the one used by the
-        serialize method.
+        Add code to deserialize this step from disk. Parses a json string
+        given by mapclient
         '''
-        configuration_file = os.path.join(location, self.getIdentifier() + '.conf')
-        conf = QtCore.QSettings(configuration_file, QtCore.QSettings.IniFormat)
-        conf.beginGroup('config')
-        self._config['identifier'] = conf.value('identifier', '')
-        self._config['Registration Method'] = conf.value('Registration Method', 'Correspondent Rigid')
-        self._config['Min Relative Error'] = conf.value('Min Relative Error', '1e-3')
-        self._config['Points to Sample'] = conf.value('Points to Sample', '1000')
-        self._config['Init Trans'] = conf.value('Init Trans', '[0,0,0]')
-        self._config['Init Rot'] = conf.value('Init Rot', '[0,0,0]')
-        self._config['Init Scale'] = conf.value('Init Scale', '1.0')
-        if conf.value('UI Mode')=='True':
-            self._config['UI Mode'] = True
-        elif conf.value('UI Mode')=='False':
-            self._config['UI Mode'] = False
-        conf.endGroup()
+        self._config.update(json.loads(string))
 
-        d = ConfigureDialog(sorted(regMethods.keys()))
+        d = ConfigureDialog()
         d.identifierOccursCount = self._identifierOccursCount
         d.setConfig(self._config)
         self._configured = d.validate()
