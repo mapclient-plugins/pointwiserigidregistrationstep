@@ -232,7 +232,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         '''
         self._config.update(json.loads(string))
 
-        d = ConfigureDialog()
+        d = ConfigureDialog(sorted(regMethods.keys()))
         d.identifierOccursCount = self._identifierOccursCount
         d.setConfig(self._config)
         self._configured = d.validate()
