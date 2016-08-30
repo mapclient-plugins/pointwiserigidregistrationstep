@@ -29,6 +29,8 @@ from mapclientplugins.pointwiserigidregistrationstep.ui_mayaviregistrationviewer
 from traits.api import HasTraits, Instance, on_trait_change, \
     Int, Dict
 
+import numpy as np
+from gias2.common import math
 from gias2.mappluginutils.mayaviviewer import MayaviViewerObjectsContainer, MayaviViewerDataPoints, colours
 
 class _ExecThread(QThread):
@@ -53,7 +55,8 @@ class MayaviRegistrationViewerWidget(QDialog):
     _targetRenderArgs = {'mode':'point', 'scale_factor':0.1, 'color':(1,0,0)}
     _registeredRenderArgs = {'mode':'point', 'scale_factor':0.1, 'color':(1,1,0)}
 
-    def __init__(self, sourceData, targetData, config, registerFunc, regMethods, parent=None):
+    def __init__(self, sourceData, targetData, config, registerFunc,
+        regMethods, manualTransformFunc, parent=None):
         '''
         Constructor
         '''
@@ -70,7 +73,9 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._sourceDataAligned = None
         self._registerFunc = registerFunc
         self._regMethods = regMethods
+        self._manualTransform = manualTransformFunc
         self._config = config
+        self._enableManualUpdate = True
 
         self._worker = _ExecThread(self._registerFunc)
         self._worker.update.connect(self._regUpdate)
@@ -96,13 +101,6 @@ class MayaviRegistrationViewerWidget(QDialog):
     def _setupGui(self):
         self._ui.samplesLineEdit.setValidator(QIntValidator())
         self._ui.xtolLineEdit.setValidator(QDoubleValidator())
-        self._ui.initTransXLineEdit.setValidator(QDoubleValidator())
-        self._ui.initTransYLineEdit.setValidator(QDoubleValidator())
-        self._ui.initTransZLineEdit.setValidator(QDoubleValidator())
-        self._ui.initRotXLineEdit.setValidator(QDoubleValidator())
-        self._ui.initRotYLineEdit.setValidator(QDoubleValidator())
-        self._ui.initRotZLineEdit.setValidator(QDoubleValidator())
-        self._ui.initScaleLineEdit.setValidator(QDoubleValidator())
 
     def _makeConnections(self):
         self._ui.tableWidget.itemClicked.connect(self._tableItemClicked)
@@ -122,15 +120,15 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._ui.xtolLineEdit.textChanged.connect(self._updateConfigXtol)
         self._ui.samplesLineEdit.textChanged.connect(self._updateConfigSamples)
 
-        self._ui.initTransXLineEdit.textChanged.connect(self._updateInitTrans)
-        self._ui.initTransYLineEdit.textChanged.connect(self._updateInitTrans)
-        self._ui.initTransZLineEdit.textChanged.connect(self._updateInitTrans)
+        self._ui.doubleSpinBox_tx.valueChanged.connect(self._updateInitTrans)
+        self._ui.doubleSpinBox_ty.valueChanged.connect(self._updateInitTrans)
+        self._ui.doubleSpinBox_tz.valueChanged.connect(self._updateInitTrans)
 
-        self._ui.initRotXLineEdit.textChanged.connect(self._updateInitRot)
-        self._ui.initRotYLineEdit.textChanged.connect(self._updateInitRot)
-        self._ui.initRotZLineEdit.textChanged.connect(self._updateInitRot)
+        self._ui.doubleSpinBox_rotx.valueChanged.connect(self._updateInitRot)
+        self._ui.doubleSpinBox_roty.valueChanged.connect(self._updateInitRot)
+        self._ui.doubleSpinBox_rotz.valueChanged.connect(self._updateInitRot)
 
-        self._ui.initScaleLineEdit.textChanged.connect(self._updateInitScale)
+        self._ui.doubleSpinBox_scale.valueChanged.connect(self._updateInitScale)
 
     def _initialiseSettings(self):
         self._ui.xtolLineEdit.setText(self._config['Min Relative Error'])
@@ -143,17 +141,23 @@ class MayaviRegistrationViewerWidget(QDialog):
 
         self._ui.regMethodsComboBox.setCurrentIndex(self._regMethods.index(self._config['Registration Method']))
 
-        initTrans = eval(self._config['Init Trans'])
-        self._ui.initTransXLineEdit.setText(str(initTrans[0]))
-        self._ui.initTransYLineEdit.setText(str(initTrans[1]))
-        self._ui.initTransZLineEdit.setText(str(initTrans[2]))
+        initTrans = self._config['Init Trans']
+        # if isinstance(initTrans, (str, unicode)):
+        #     initTrans = eval(initTrans)
 
-        initRot = eval(self._config['Init Rot'])
-        self._ui.initRotXLineEdit.setText(str(initRot[0]))
-        self._ui.initRotYLineEdit.setText(str(initRot[1]))
-        self._ui.initRotZLineEdit.setText(str(initRot[2]))
+        self._ui.doubleSpinBox_tx.setValue(float(initTrans[0]))
+        self._ui.doubleSpinBox_ty.setValue(float(initTrans[1]))
+        self._ui.doubleSpinBox_tz.setValue(float(initTrans[2]))
 
-        self._ui.initScaleLineEdit.setText(self._config['Init Scale'])
+        initRot = self._config['Init Rot']
+        # if isinstance(initRot, (str, unicode)):
+        #     initRot = eval(initRot)
+        self._ui.doubleSpinBox_rotx.setValue(float(initRot[0]))
+        self._ui.doubleSpinBox_roty.setValue(float(initRot[1]))
+        self._ui.doubleSpinBox_rotz.setValue(float(initRot[2]))
+
+        self._ui.doubleSpinBox_scale.setValue(self._config['Init Scale'])
+        # self._ui.doubleSpinBox_scale.setValue(float(self._config['Init Scale']))
 
     def _initialiseObjectTable(self):
 
@@ -172,8 +176,8 @@ class MayaviRegistrationViewerWidget(QDialog):
 
     def _addObjectToTable(self, row, name, obj, checked=True):
         typeName = obj.typeName
-        print(typeName)
-        print(name)
+        # print(typeName)
+        # print(name)
         tableItem = QTableWidgetItem(name)
         if checked:
             tableItem.setCheckState(Qt.Checked)
@@ -187,8 +191,8 @@ class MayaviRegistrationViewerWidget(QDialog):
         selectedRow = self._ui.tableWidget.currentRow()
         self.selectedObjectName = self._ui.tableWidget.item(selectedRow, self.objectTableHeaderColumns['visible']).text()
         self._populateScalarsDropDown(self.selectedObjectName)
-        print(selectedRow)
-        print(self.selectedObjectName)
+        # print(selectedRow)
+        # print(self.selectedObjectName)
 
     def _visibleBoxChanged(self, tableItem):
         # get name of object selected
@@ -233,52 +237,36 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._config['Points to Sample'] = self._ui.samplesLineEdit.text()
 
     def _updateInitTrans(self):
-        xText = self._ui.initTransXLineEdit.text()
-        if xText=='':
-            xText = '0'
-            self._ui.initTransXLineEdit.setText(xText)
+        tx = self._ui.doubleSpinBox_tx.value()
+        ty = self._ui.doubleSpinBox_ty.value()
+        tz = self._ui.doubleSpinBox_tz.value()
 
-        yText = self._ui.initTransYLineEdit.text()
-        if yText=='':
-            yText = '0'
-            self._ui.initTransYLineEdit.setText(yText)
-
-        zText = self._ui.initTransZLineEdit.text()
-        if zText=='':
-            zText = '0'
-            self._ui.initTransZLineEdit.setText(zText)
-
-        self._config['Init Trans'] = '[' + xText + ','\
-                                         + yText + ','\
-                                         + zText + ']'
+        self._config['Init Trans'] = [tx,ty,tz]
+        self._manualUpdate()
 
     def _updateInitRot(self):
-        xText = self._ui.initRotXLineEdit.text()
-        if xText=='':
-            xText = '0'
-            self._ui.initRotXLineEdit.setText(xText)
+        rx = self._ui.doubleSpinBox_rotx.value()
+        ry = self._ui.doubleSpinBox_roty.value()
+        rz = self._ui.doubleSpinBox_rotz.value()
 
-        yText = self._ui.initRotYLineEdit.text()
-        if yText=='':
-            yText = '0'
-            self._ui.initRotYLineEdit.setText(yText)
-
-        zText = self._ui.initRotZLineEdit.text()
-        if zText=='':
-            zText = '0'
-            self._ui.initRotZLineEdit.setText(zText)
-
-        self._config['Init Rot'] = '[' + xText + ','\
-                                       + yText + ','\
-                                       + zText + ']'
+        self._config['Init Rot'] = [rx,ry,rz]
+        self._manualUpdate()
 
     def _updateInitScale(self):
-        sText = self._ui.initScaleLineEdit.text()
-        if sText=='':
-            sText = 1.0
-            self._ui.initScaleLineEdit.setText(sText)
+        s = self._ui.doubleSpinBox_scale.value()
+        self._config['Init Scale'] = s
+        self._manualUpdate()
 
-        self._config['Init Scale'] = sText
+    def _manualUpdate(self):
+        """Called when init translation, rotation and scale spinboxes
+        are changed
+        """
+        if self._enableManualUpdate:
+            transform, self._registeredData = self._manualTransform()
+            regObj = self._objects.getObject('registered')
+            regObj.updateGeometry(self._registeredData, self._scene)
+            regTableItem = self._ui.tableWidget.item(2, self.objectTableHeaderColumns['visible'])
+            regTableItem.setCheckState(Qt.Checked)
 
     def _regUpdate(self, regOutput):
         # update registered datacloud
@@ -289,23 +277,43 @@ class MayaviRegistrationViewerWidget(QDialog):
         regTableItem = self._ui.tableWidget.item(2, self.objectTableHeaderColumns['visible'])
         regTableItem.setCheckState(Qt.Checked)
 
+        # update transformation spinboxes
+        if self._config['Registration Method']!='Correspondent Affine':
+            self._updateTransformBoxes(transform.T)
+
         # update error fields
         self._ui.RMSELineEdit.setText(str(rmse))
 
         # unlock reg ui
         self._regUnlockUI()
 
+    def _updateTransformBoxes(self, T):
+        # self._enableManualUpdate = False
+        t = T[:3]
+        r = T[3:6]
+        self._ui.doubleSpinBox_tx.setValue(t[0])
+        self._ui.doubleSpinBox_ty.setValue(t[1])
+        self._ui.doubleSpinBox_tz.setValue(t[2])
+        self._ui.doubleSpinBox_rotx.setValue(np.rad2deg(math.trimAngle(r[0])))
+        self._ui.doubleSpinBox_roty.setValue(np.rad2deg(math.trimAngle(r[1])))
+        self._ui.doubleSpinBox_rotz.setValue(np.rad2deg(math.trimAngle(r[2])))
+        if len(T)>6:
+            s = T[6]
+            self._ui.doubleSpinBox_scale.setValue(s)
+
+        # self._enableManualUpdate = True
+
     def _regLockUI(self):
         self._ui.regMethodsComboBox.setEnabled(False)
         self._ui.xtolLineEdit.setEnabled(False)
         self._ui.samplesLineEdit.setEnabled(False)
-        self._ui.initTransXLineEdit.setEnabled(False)
-        self._ui.initTransYLineEdit.setEnabled(False)
-        self._ui.initTransZLineEdit.setEnabled(False)
-        self._ui.initRotXLineEdit.setEnabled(False)
-        self._ui.initRotYLineEdit.setEnabled(False)
-        self._ui.initRotZLineEdit.setEnabled(False)
-        self._ui.initScaleLineEdit.setEnabled(False)
+        self._ui.doubleSpinBox_tx.setEnabled(False)
+        self._ui.doubleSpinBox_ty.setEnabled(False)
+        self._ui.doubleSpinBox_tz.setEnabled(False)
+        self._ui.doubleSpinBox_rotx.setEnabled(False)
+        self._ui.doubleSpinBox_roty.setEnabled(False)
+        self._ui.doubleSpinBox_rotz.setEnabled(False)
+        self._ui.doubleSpinBox_scale.setEnabled(False)
         self._ui.registerButton.setEnabled(False)
         self._ui.resetButton.setEnabled(False)
         self._ui.acceptButton.setEnabled(False)
@@ -315,13 +323,13 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._ui.regMethodsComboBox.setEnabled(True)
         self._ui.xtolLineEdit.setEnabled(True)
         self._ui.samplesLineEdit.setEnabled(True)
-        self._ui.initTransXLineEdit.setEnabled(True)
-        self._ui.initTransYLineEdit.setEnabled(True)
-        self._ui.initTransZLineEdit.setEnabled(True)
-        self._ui.initRotXLineEdit.setEnabled(True)
-        self._ui.initRotYLineEdit.setEnabled(True)
-        self._ui.initRotZLineEdit.setEnabled(True)
-        self._ui.initScaleLineEdit.setEnabled(True)
+        self._ui.doubleSpinBox_tx.setEnabled(True)
+        self._ui.doubleSpinBox_ty.setEnabled(True)
+        self._ui.doubleSpinBox_tz.setEnabled(True)
+        self._ui.doubleSpinBox_rotx.setEnabled(True)
+        self._ui.doubleSpinBox_roty.setEnabled(True)
+        self._ui.doubleSpinBox_rotz.setEnabled(True)
+        self._ui.doubleSpinBox_scale.setEnabled(True)
         self._ui.registerButton.setEnabled(True)
         self._ui.resetButton.setEnabled(True)
         self._ui.acceptButton.setEnabled(True)
@@ -335,6 +343,9 @@ class MayaviRegistrationViewerWidget(QDialog):
         regObj.updateGeometry(self._sourceData, self._scene)
         regTableItem = self._ui.tableWidget.item(2, self.objectTableHeaderColumns['visible'])
         regTableItem.setCheckState(Qt.Unchecked)
+
+        # clear spinboxes
+        self._updateTransformBoxes([0,0,0,0,0,0,1])
 
         # clear error fields
         self._ui.RMSELineEdit.clear()

@@ -28,7 +28,7 @@ Configuration
 - **Min Relative Error** : Termination criteria for iterative registration methods.
 - **Points to Sample** : Number of points to uniformly sample from the source and target pointclouds to use in registration.
 - **Initial Translation** : Initial translation in x, y, and z to apply to the source pointcloud before iterative registration. If 0, the initial translation will be the vector from the source centre of mass to the target centre of mass.
-- **Initial Rotation** : Initial Euler rotation angles about x, y, and z to apply to the source pointcloud before iterative registration.
+- **Initial Rotation** : Initial Euler rotation angles about x, y, and z to apply to the source pointcloud before iterative registration. Rotation order is z, y, x.
 - **Initial Scale** : Initial isotropic scale factor to apply to the source pointcloud before iterative registration.
 
 Usage
@@ -39,6 +39,8 @@ If the source and target pointclouds are already correspondent (i.e. they have t
 
 If there is no correspondence, then one of the ICP method can be used. For reliable results, an initial rotation should be provided in terms of Euler angles to rougly align the source to target. When using the ICP methods, is the target pointcloud is partial, the target-source ICP methods should be used. Inversely, if the source pointcloud is partial, then the source-target ICP method should be used.
 
+In the step GUI, the translation, rotation, and scaling of the source pointcloud can be modified manually before and after automatic registration. Note that the selected registration method determines what transformation are output. For example, if _ICP Rigid Source-Target_ is selected, the scaling factor will not be output even if it was manually modified.
+
 The final transformation can be output and passed to another step to apply the transformation to some other object. For example, a fieldwork model can be registered to a segmented surface by using points sampled on the model (Fieldwork Model Evaluation Step) as the source and vertices of the segmentation as the target. The output transformation can be passed to the Fieldwork Model Transformation Step to transform the fieldwork model to the registered position.
 
 Step GUI
@@ -48,9 +50,9 @@ Step GUI
 - **Reg Type** : Select the registration method.
 - **Min Rel Err**: Termination criteria for iterative registration methods.
 - **Samples** : Number of points to uniformly sample from the source and target pointclouds to use in registration.
-- **Init. Trans.** : Initial translation in x, y, and z to apply to the source pointcloud before iterative registration. If 0, the initial translation will be the vector from the source centre of mass to the target centre of mass.
-- **Init. Rot.** : Initial Euler rotation angles about x, y, and z to apply to the source pointcloud before iterative registration.
-- **Init. Scale** : Initial isotropic scale factor to apply to the source pointcloud before iterative registration.
+- **Translations** : Translation in x, y, and z to apply to the source pointcloud. If all 0s, the initial translation will be the vector from the source centre of mass to the target centre of mass.
+- **Rotations** : Euler rotation angles about x, y, and z to apply to the source pointcloud. Rotation order is z, y, x.
+- **Scaling** : Isotropic scale factor to apply to the source pointcloud.
 - **Register** : Run the selected registration method using the given parameters. The registered source pointcloud will be shown when done.
 - **Reset** : Remove the registered source pointcloud.
 - **Abort** : Abort the workflow.

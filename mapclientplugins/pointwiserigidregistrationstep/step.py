@@ -10,6 +10,7 @@ from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclientplugins.pointwiserigidregistrationstep.configuredialog import ConfigureDialog
 
 from gias2.registration import alignment_fitting as AF
+from gias2.common import transform3D
 from mapclientplugins.pointwiserigidregistrationstep.mayaviregistrationviewerwidget import MayaviRegistrationViewerWidget
 from gias2.mappluginutils.datatypes import transformations as T
 
@@ -69,15 +70,15 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._config['Registration Method'] = 'Correspondent Affine'
         self._config['Min Relative Error'] = '1e-3'
         self._config['Points to Sample'] = '1000'
-        self._config['Init Trans'] = '[0,0,0]'
-        self._config['Init Rot'] = '[0,0,0]'
-        self._config['Init Scale'] = '1.0'
+        self._config['Init Trans'] = [0.0,0.0,0.0]
+        self._config['Init Rot'] = [0.0,0.0,0.0]
+        self._config['Init Scale'] = 1.0
 
         self.sourceData = None
         self.targetData = None
         self.sourceDataAligned = None
         self.transform = None
-        self.RMSE = None
+        self.RMSE = -1.0
 
         self._widget = None
 
@@ -87,12 +88,12 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         Make sure you call the _doneExecution() method when finished.  This method
         may be connected up to a button in a widget for example.
         '''
-        print('points to sample:', self._config['Points to Sample'])
         # Put your execute step code here before calling the '_doneExecution' method.
         if self._config['UI Mode']:
             self._widget = MayaviRegistrationViewerWidget(
                             self.sourceData, self.targetData, self._config,
-                            self._register, sorted(regMethods.keys())
+                            self._register, sorted(regMethods.keys()),
+                            self._manualTransform
                             )
             self._widget._ui.acceptButton.clicked.connect(self._doneExecution)
             self._widget._ui.abortButton.clicked.connect(self._abort)
@@ -104,9 +105,9 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
             self._doneExecution()
 
     def _makeX0(self):
-        t0 = eval(self._config['Init Trans'])
-        r0 = eval(self._config['Init Rot'])
-        s0 = float(self._config['Init Scale'])
+        t0 = self._config['Init Trans']
+        r0 = [np.deg2rad(x) for x in self._config['Init Rot']]
+        s0 = self._config['Init Scale']
 
         # auto initialise translation
         if t0==[0,0,0]:
@@ -124,6 +125,19 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         else:
             return None
 
+    def _manualTransform(self):
+        t0 = self._config['Init Trans']
+        r0 = [np.deg2rad(x) for x in self._config['Init Rot']]
+        s0 = self._config['Init Scale']
+
+        print('t0, r0, s0:', t0, r0, s0)
+
+        # apply transform to source points
+        T = np.hstack([t0, r0, s0])
+        self.sourceDataAligned = transform3D.transformRigidScale3DAboutCoM(self.sourceData, T)
+        self.transform = regMethodTransforms[self._config['Registration Method']](T)
+        self.transform.setP(self.sourceData.mean(0))
+        return self.transform, self.sourceDataAligned
 
     def _register(self):
         reg = regMethods[self._config['Registration Method']]
@@ -147,7 +161,6 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         print('Registered...')
         print('RMSE:', self.RMSE)
         print('T:', T)
-        # time.sleep(3)
         return self.transform, self.sourceDataAligned, self.RMSE
 
     def _abort(self):
@@ -231,10 +244,26 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         given by mapclient
         '''
         self._config.update(json.loads(string))
+        self._parseLegacyParams()
 
         d = ConfigureDialog(sorted(regMethods.keys()))
         d.identifierOccursCount = self._identifierOccursCount
         d.setConfig(self._config)
         self._configured = d.validate()
 
+    def _parseLegacyParams(self):
+        """Turn strs of lists into lists in config
+        """
 
+        def _parseStrList(s):
+            _s1 = s[1:-1]
+            return [float(x) for x in _s1.split(',')]
+
+        if isinstance(self._config['Init Trans'], (str, unicode)):
+            self._config['Init Trans'] = _parseStrList(self._config['Init Trans'])
+
+        if isinstance(self._config['Init Rot'], (str, unicode)):
+            self._config['Init Rot'] = _parseStrList(self._config['Init Rot'])
+
+        if isinstance(self._config['Init Scale'], (str, unicode)):
+            self._config['Init Scale'] = float(self._config['Init Scale'])

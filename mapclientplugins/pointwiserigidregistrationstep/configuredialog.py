@@ -121,13 +121,13 @@ class ConfigureDialog(QtGui.QDialog):
         config['Registration Method'] = self._ui.regMethodsComboBox.currentText()
         config['Min Relative Error'] = self._ui.xtolLineEdit.text()
         config['Points to Sample'] = self._ui.sampleLineEdit.text()
-        config['Init Trans'] = '[' + self._ui.txLineEdit.text() + ','\
-                                   + self._ui.tyLineEdit.text() + ','\
-                                   + self._ui.tzLineEdit.text() + ']'
-        config['Init Rot'] = '[' + self._ui.rxLineEdit.text() + ','\
-                                 + self._ui.ryLineEdit.text() + ','\
-                                 + self._ui.rzLineEdit.text() + ']'
-        config['Init Scale'] = self._ui.sLineEdit.text()
+        config['Init Trans'] = [float(self._ui.txLineEdit.text()),
+                                float(self._ui.tyLineEdit.text()),
+                                float(self._ui.tzLineEdit.text())]
+        config['Init Rot'] = [float(self._ui.rxLineEdit.text()),
+                              float(self._ui.ryLineEdit.text()),
+                              float(self._ui.rzLineEdit.text())]
+        config['Init Scale'] = float(self._ui.sLineEdit.text())
         return config
 
     def setConfig(self, config):
@@ -142,13 +142,13 @@ class ConfigureDialog(QtGui.QDialog):
         self._ui.regMethodsComboBox.setCurrentIndex(self._regMethods.index(config['Registration Method']))
         self._ui.xtolLineEdit.setText(config['Min Relative Error'])
         self._ui.sampleLineEdit.setText(config['Points to Sample'])
-        initTrans = eval(config['Init Trans'])
+        initTrans = config['Init Trans']
         self._ui.txLineEdit.setText(str(initTrans[0]))
         self._ui.tyLineEdit.setText(str(initTrans[1]))
         self._ui.tzLineEdit.setText(str(initTrans[2]))
-        initRot = eval(config['Init Rot'])
+        initRot = config['Init Rot']
         self._ui.rxLineEdit.setText(str(initRot[0]))
         self._ui.ryLineEdit.setText(str(initRot[1]))
         self._ui.rzLineEdit.setText(str(initRot[2]))
-        self._ui.sLineEdit.setText(config['Init Scale'])
+        self._ui.sLineEdit.setText(str(config['Init Scale']))
 
