@@ -7,7 +7,7 @@ rigid-body plus scaling, and affine transformation.
 
 Requires
 --------
-- GIAS2 : https://bitbucket.org/jangle/gias
+- GIAS2 : https://bitbucket.org/jangle/gias2
 
 Inputs
 ------
