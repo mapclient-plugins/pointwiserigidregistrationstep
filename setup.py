@@ -17,8 +17,7 @@ license = readfile("LICENSE")
 setup(name=u'mapclientplugins.pointwiserigidregistrationstep',
     version='1.0.0',
     description='',
-    long_description='
-'.join(readme) + license,
+    long_description='\n'.join(readme) + license,
     classifiers=[
       "Development Status :: 4 - Beta",
       "License :: OSI Approved :: Apache Software License",
