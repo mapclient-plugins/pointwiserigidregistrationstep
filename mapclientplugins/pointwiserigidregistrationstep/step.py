@@ -145,7 +145,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         samples = int(self._config['Points to Sample'])
         x0 = self._makeX0()
         print('T0:', x0)
-        if x0==None:
+        if x0 is None:
             T, self.sourceDataAligned,\
             (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, xtol=xtol, 
                                      sample=samples, outputErrors=True)
