@@ -20,7 +20,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
 __version__ = '1.0.1'
 __author__ = 'Ju Zhang'
 __stepname__ = 'Point-wise Rigid Registration'
-__location__ = 'https://github.com/mapclient-plugins/pointwiserigidregistrationstep/archive/v1.0.0.zip'
+__location__ = 'https://github.com/mapclient-plugins/pointwiserigidregistrationstep/archive/v1.0.1.zip'
 
 from mapclientplugins.pointwiserigidregistrationstep import step
 import mapclientplugins.pointwiserigidregistrationstep.resources_rc
