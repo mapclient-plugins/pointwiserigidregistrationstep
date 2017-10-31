@@ -15,7 +15,7 @@ requires = readfile("requirements.txt", split=True)
 license = readfile("LICENSE")
 
 setup(name=u'mapclientplugins.pointwiserigidregistrationstep',
-    version='1.0.0',
+    version='1.0.1',
     description='',
     long_description='\n'.join(readme) + license,
     classifiers=[
