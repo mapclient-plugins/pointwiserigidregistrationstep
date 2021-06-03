@@ -18,12 +18,12 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
 import os
-os.environ['ETS_TOOLKIT'] = 'qt4'
+os.environ['ETS_TOOLKIT'] = 'qt5'
 
-from PySide.QtGui import QDialog, QFileDialog, QDialogButtonBox, QAbstractItemView, QTableWidgetItem
-from PySide.QtGui import QDoubleValidator, QIntValidator
-from PySide.QtCore import Qt
-from PySide.QtCore import QThread, Signal
+from PySide2.QtWidgets import QDialog, QAbstractItemView, QTableWidgetItem
+from PySide2.QtGui import QDoubleValidator, QIntValidator
+from PySide2.QtCore import Qt
+from PySide2.QtCore import QThread, Signal
 
 from mapclientplugins.pointwiserigidregistrationstep.ui_mayaviregistrationviewerwidget import Ui_Dialog
 from traits.api import HasTraits, Instance, on_trait_change, \
