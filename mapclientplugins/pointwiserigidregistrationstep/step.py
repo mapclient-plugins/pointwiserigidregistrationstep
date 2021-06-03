@@ -207,7 +207,8 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         then set:
             self._configured = True
         '''
-        dlg = ConfigureDialog(sorted(regMethods.keys()))
+        #dlg = ConfigureDialog(sorted(regMethods.keys()))
+        dlg = ConfigureDialog(self._main_window)
         dlg.identifierOccursCount = self._identifierOccursCount
         dlg.setConfig(self._config)
         dlg.validate()
@@ -246,7 +247,8 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._config.update(json.loads(string))
         self._parseLegacyParams()
 
-        d = ConfigureDialog(sorted(regMethods.keys()))
+        #d = ConfigureDialog(sorted(regMethods.keys()))
+        d = ConfigureDialog(self._main_window)
         d.identifierOccursCount = self._identifierOccursCount
         d.setConfig(self._config)
         self._configured = d.validate()
