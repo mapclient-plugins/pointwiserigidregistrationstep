@@ -1,10 +1,9 @@
-
-
 from PySide2 import QtGui, QtWidgets
 from mapclientplugins.pointwiserigidregistrationstep.ui_configuredialog import Ui_Dialog
 
 INVALID_STYLE_SHEET = 'background-color: rgba(239, 0, 0, 50)'
 DEFAULT_STYLE_SHEET = ''
+
 
 class ConfigureDialog(QtWidgets.QDialog):
     '''
@@ -16,7 +15,7 @@ class ConfigureDialog(QtWidgets.QDialog):
         Constructor
         '''
         QtWidgets.QDialog.__init__(self, parent)
-        
+
         self._ui = Ui_Dialog()
         self._ui.setupUi(self)
 
@@ -60,19 +59,19 @@ class ConfigureDialog(QtWidgets.QDialog):
         self._ui.sLineEdit.textChanged.connect(self._fieldsUpdated)
 
     def _fieldsUpdated(self):
-        if self._ui.txLineEdit.text()=='':
+        if self._ui.txLineEdit.text() == '':
             self._ui.txLineEdit.setText('0')
-        if self._ui.tyLineEdit.text()=='':
+        if self._ui.tyLineEdit.text() == '':
             self._ui.tyLineEdit.setText('0')
-        if self._ui.tzLineEdit.text()=='':
+        if self._ui.tzLineEdit.text() == '':
             self._ui.tzLineEdit.setText('0')
-        if self._ui.rxLineEdit.text()=='':
+        if self._ui.rxLineEdit.text() == '':
             self._ui.rxLineEdit.setText('0')
-        if self._ui.ryLineEdit.text()=='':
+        if self._ui.ryLineEdit.text() == '':
             self._ui.ryLineEdit.setText('0')
-        if self._ui.rzLineEdit.text()=='':
+        if self._ui.rzLineEdit.text() == '':
             self._ui.rzLineEdit.setText('0')
-        if self._ui.sLineEdit.text()=='':
+        if self._ui.sLineEdit.text() == '':
             self._ui.sLineEdit.setText('1.0')
 
     def accept(self):
@@ -83,8 +82,9 @@ class ConfigureDialog(QtWidgets.QDialog):
         result = QtWidgets.QMessageBox.Yes
         if not self.validate():
             result = QtWidgets.QMessageBox.warning(self, 'Invalid Configuration',
-                'This configuration is invalid.  Unpredictable behaviour may result if you choose \'Yes\', are you sure you want to save this configuration?)',
-                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+                                                   'This configuration is invalid.  Unpredictable behaviour may result if you choose \'Yes\', are you sure you want to save this configuration?)',
+                                                   QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                                   QtWidgets.QMessageBox.No)
 
         if result == QtWidgets.QMessageBox.Yes:
             QtWidgets.QDialog.accept(self)
@@ -150,4 +150,3 @@ class ConfigureDialog(QtWidgets.QDialog):
         self._ui.ryLineEdit.setText(str(initRot[1]))
         self._ui.rzLineEdit.setText(str(initRot[2]))
         self._ui.sLineEdit.setText(str(config['Init Scale']))
-
