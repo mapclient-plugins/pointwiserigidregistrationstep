@@ -18,12 +18,13 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 '''
 import os
-os.environ['ETS_TOOLKIT'] = 'qt4'
 
-from PySide.QtGui import QDialog, QFileDialog, QDialogButtonBox, QAbstractItemView, QTableWidgetItem
-from PySide.QtGui import QDoubleValidator, QIntValidator
-from PySide.QtCore import Qt
-from PySide.QtCore import QThread, Signal
+os.environ['ETS_TOOLKIT'] = 'qt5'
+
+from PySide2.QtWidgets import QDialog, QAbstractItemView, QTableWidgetItem
+from PySide2.QtGui import QDoubleValidator, QIntValidator
+from PySide2.QtCore import Qt
+from PySide2.QtCore import QThread, Signal
 
 from mapclientplugins.pointwiserigidregistrationstep.ui_mayaviregistrationviewerwidget import Ui_Dialog
 from traits.api import HasTraits, Instance, on_trait_change, \
@@ -32,6 +33,7 @@ from traits.api import HasTraits, Instance, on_trait_change, \
 import numpy as np
 from gias2.common import math
 from gias2.mappluginutils.mayaviviewer import MayaviViewerObjectsContainer, MayaviViewerDataPoints, colours
+
 
 class _ExecThread(QThread):
     update = Signal(tuple)
@@ -44,19 +46,20 @@ class _ExecThread(QThread):
         output = self.func()
         self.update.emit(output)
 
+
 class MayaviRegistrationViewerWidget(QDialog):
     '''
     Configure dialog to present the user with the options to configure this step.
     '''
     defaultColor = colours['bone']
-    objectTableHeaderColumns = {'visible':0, 'type':1}
-    backgroundColour = (0.0,0.0,0.0)
-    _sourceRenderArgs = {'mode':'point', 'scale_factor':0.1, 'color':(0,1,0)}
-    _targetRenderArgs = {'mode':'point', 'scale_factor':0.1, 'color':(1,0,0)}
-    _registeredRenderArgs = {'mode':'point', 'scale_factor':0.1, 'color':(1,1,0)}
+    objectTableHeaderColumns = {'visible': 0, 'type': 1}
+    backgroundColour = (0.0, 0.0, 0.0)
+    _sourceRenderArgs = {'mode': 'point', 'scale_factor': 0.1, 'color': (0, 1, 0)}
+    _targetRenderArgs = {'mode': 'point', 'scale_factor': 0.1, 'color': (1, 0, 0)}
+    _registeredRenderArgs = {'mode': 'point', 'scale_factor': 0.1, 'color': (1, 1, 0)}
 
     def __init__(self, sourceData, targetData, config, registerFunc,
-        regMethods, manualTransformFunc, parent=None):
+                 regMethods, manualTransformFunc, parent=None):
         '''
         Constructor
         '''
@@ -84,9 +87,12 @@ class MayaviRegistrationViewerWidget(QDialog):
 
         # create self._objects
         self._objects = MayaviViewerObjectsContainer()
-        self._objects.addObject('source', MayaviViewerDataPoints('source', self._sourceData, renderArgs=self._sourceRenderArgs))
-        self._objects.addObject('target', MayaviViewerDataPoints('target', self._targetData, renderArgs=self._targetRenderArgs))
-        self._objects.addObject('registered', MayaviViewerDataPoints('registered', self._sourceData, renderArgs=self._registeredRenderArgs))
+        self._objects.addObject('source',
+                                MayaviViewerDataPoints('source', self._sourceData, renderArgs=self._sourceRenderArgs))
+        self._objects.addObject('target',
+                                MayaviViewerDataPoints('target', self._targetData, renderArgs=self._targetRenderArgs))
+        self._objects.addObject('registered', MayaviViewerDataPoints('registered', self._sourceData,
+                                                                     renderArgs=self._registeredRenderArgs))
 
         self._setupGui()
         self._makeConnections()
@@ -106,11 +112,10 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._ui.tableWidget.itemClicked.connect(self._tableItemClicked)
         self._ui.tableWidget.itemChanged.connect(self._visibleBoxChanged)
         self._ui.screenshotSaveButton.clicked.connect(self._saveScreenShot)
-        
+
         # clicking register spawns a thread, need to lock parts of ui
         self._ui.registerButton.clicked.connect(self._worker.start)
         self._ui.registerButton.clicked.connect(self._regLockUI)
-        
 
         self._ui.resetButton.clicked.connect(self._reset)
         self._ui.abortButton.clicked.connect(self._abort)
@@ -166,7 +171,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self._ui.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
         self._ui.tableWidget.setSelectionMode(QAbstractItemView.SingleSelection)
-        
+
         self._addObjectToTable(0, 'source', self._objects.getObject('source'))
         self._addObjectToTable(1, 'target', self._objects.getObject('target'))
         self._addObjectToTable(2, 'registered', self._objects.getObject('registered'), checked=False)
@@ -189,7 +194,8 @@ class MayaviRegistrationViewerWidget(QDialog):
 
     def _tableItemClicked(self):
         selectedRow = self._ui.tableWidget.currentRow()
-        self.selectedObjectName = self._ui.tableWidget.item(selectedRow, self.objectTableHeaderColumns['visible']).text()
+        self.selectedObjectName = self._ui.tableWidget.item(selectedRow,
+                                                            self.objectTableHeaderColumns['visible']).text()
         self._populateScalarsDropDown(self.selectedObjectName)
         # print(selectedRow)
         # print(self.selectedObjectName)
@@ -199,10 +205,10 @@ class MayaviRegistrationViewerWidget(QDialog):
         # name = self._getSelectedObjectName()
 
         # checked changed item is actually the checkbox
-        if tableItem.column()==self.objectTableHeaderColumns['visible']:
+        if tableItem.column() == self.objectTableHeaderColumns['visible']:
             # get visible status
             name = tableItem.text()
-            visible = tableItem.checkState().name=='Checked'
+            visible = tableItem.checkState().name == 'Checked'
 
             print('visibleboxchanged name', name)
             print('visibleboxchanged visible', visible)
@@ -241,7 +247,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         ty = self._ui.doubleSpinBox_ty.value()
         tz = self._ui.doubleSpinBox_tz.value()
 
-        self._config['Init Trans'] = [tx,ty,tz]
+        self._config['Init Trans'] = [tx, ty, tz]
         self._manualUpdate()
 
     def _updateInitRot(self):
@@ -249,7 +255,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         ry = self._ui.doubleSpinBox_roty.value()
         rz = self._ui.doubleSpinBox_rotz.value()
 
-        self._config['Init Rot'] = [rx,ry,rz]
+        self._config['Init Rot'] = [rx, ry, rz]
         self._manualUpdate()
 
     def _updateInitScale(self):
@@ -278,7 +284,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         regTableItem.setCheckState(Qt.Checked)
 
         # update transformation spinboxes
-        if self._config['Registration Method']!='Correspondent Affine':
+        if self._config['Registration Method'] != 'Correspondent Affine':
             self._updateTransformBoxes(transform.T)
 
         # update error fields
@@ -297,7 +303,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         self._ui.doubleSpinBox_rotx.setValue(np.rad2deg(math.trimAngle(r[0])))
         self._ui.doubleSpinBox_roty.setValue(np.rad2deg(math.trimAngle(r[1])))
         self._ui.doubleSpinBox_rotz.setValue(np.rad2deg(math.trimAngle(r[2])))
-        if len(T)>6:
+        if len(T) > 6:
             s = T[6]
             self._ui.doubleSpinBox_scale.setValue(s)
 
@@ -345,7 +351,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         regTableItem.setCheckState(Qt.Unchecked)
 
         # clear spinboxes
-        self._updateTransformBoxes([0,0,0,0,0,0,1])
+        self._updateTransformBoxes([0, 0, 0, 0, 0, 0, 1])
 
         # clear error fields
         self._ui.RMSELineEdit.clear()
@@ -371,7 +377,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         for r in range(self._ui.tableWidget.rowCount()):
             tableItem = self._ui.tableWidget.item(r, self.objectTableHeaderColumns['visible'])
             name = tableItem.text()
-            visible = tableItem.checkState().name=='Checked'
+            visible = tableItem.checkState().name == 'Checked'
             obj = self._objects.getObject(name)
             print(obj.name)
             if obj.sceneObject:
@@ -385,9 +391,9 @@ class MayaviRegistrationViewerWidget(QDialog):
         filename = self._ui.screenshotFilenameLineEdit.text()
         width = int(self._ui.screenshotPixelXLineEdit.text())
         height = int(self._ui.screenshotPixelYLineEdit.text())
-        self._scene.mlab.savefig( filename, size=( width, height ) )
+        self._scene.mlab.savefig(filename, size=(width, height))
 
-    #================================================================#
+    # ================================================================#
     @on_trait_change('scene.activated')
     def testPlot(self):
         # This function is called when the view is opened. We don't
@@ -398,7 +404,5 @@ class MayaviRegistrationViewerWidget(QDialog):
         # We can do normal mlab calls on the embedded scene.
         self._scene.mlab.test_points3d()
 
-
     # def _saveImage_fired( self ):
     #     self.scene.mlab.savefig( str(self.saveImageFilename), size=( int(self.saveImageWidth), int(self.saveImageLength) ) )
-        
