@@ -260,11 +260,11 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
             _s1 = s[1:-1]
             return [float(x) for x in _s1.split(',')]
 
-        if isinstance(self._config['Init Trans'], (str, unicode)):
+        if isinstance(self._config['Init Trans'], str):
             self._config['Init Trans'] = _parseStrList(self._config['Init Trans'])
 
-        if isinstance(self._config['Init Rot'], (str, unicode)):
+        if isinstance(self._config['Init Rot'], str):
             self._config['Init Rot'] = _parseStrList(self._config['Init Rot'])
 
-        if isinstance(self._config['Init Scale'], (str, unicode)):
+        if isinstance(self._config['Init Scale'], str):
             self._config['Init Scale'] = float(self._config['Init Scale'])
