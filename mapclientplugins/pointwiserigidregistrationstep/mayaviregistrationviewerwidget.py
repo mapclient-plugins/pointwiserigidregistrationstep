@@ -19,16 +19,15 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
 '''
 import os
 
-os.environ['ETS_TOOLKIT'] = 'qt5'
+os.environ['ETS_TOOLKIT'] = 'qt'
 
 from PySide2.QtWidgets import QDialog, QAbstractItemView, QTableWidgetItem
-from PySide2.QtGui import QDoubleValidator, QIntValidator
+from PySide2.QtGui import QDoubleValidator, QIntValidator, Qt
 from PySide2.QtCore import Qt
 from PySide2.QtCore import QThread, Signal
 
 from mapclientplugins.pointwiserigidregistrationstep.ui_mayaviregistrationviewerwidget import Ui_Dialog
-from traits.api import HasTraits, Instance, on_trait_change, \
-    Int, Dict
+from traits.api import on_trait_change
 
 import numpy as np
 from gias2.common import math
@@ -181,8 +180,6 @@ class MayaviRegistrationViewerWidget(QDialog):
 
     def _addObjectToTable(self, row, name, obj, checked=True):
         typeName = obj.typeName
-        # print(typeName)
-        # print(name)
         tableItem = QTableWidgetItem(name)
         if checked:
             tableItem.setCheckState(Qt.Checked)
@@ -197,8 +194,6 @@ class MayaviRegistrationViewerWidget(QDialog):
         self.selectedObjectName = self._ui.tableWidget.item(selectedRow,
                                                             self.objectTableHeaderColumns['visible']).text()
         self._populateScalarsDropDown(self.selectedObjectName)
-        # print(selectedRow)
-        # print(self.selectedObjectName)
 
     def _visibleBoxChanged(self, tableItem):
         # get name of object selected
@@ -208,7 +203,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         if tableItem.column() == self.objectTableHeaderColumns['visible']:
             # get visible status
             name = tableItem.text()
-            visible = tableItem.checkState().name == 'Checked'
+            visible = tableItem.checkState() == Qt.CheckState.Checked
 
             print('visibleboxchanged name', name)
             print('visibleboxchanged visible', visible)
@@ -377,7 +372,7 @@ class MayaviRegistrationViewerWidget(QDialog):
         for r in range(self._ui.tableWidget.rowCount()):
             tableItem = self._ui.tableWidget.item(r, self.objectTableHeaderColumns['visible'])
             name = tableItem.text()
-            visible = tableItem.checkState().name == 'Checked'
+            visible = tableItem.checkState() == Qt.CheckState.Checked
             obj = self._objects.getObject(name)
             print(obj.name)
             if obj.sceneObject:

@@ -99,7 +99,6 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
             self._widget._ui.acceptButton.clicked.connect(self._doneExecution)
             self._widget._ui.abortButton.clicked.connect(self._abort)
             self._widget._ui.resetButton.clicked.connect(self._reset)
-            self._widget.setModal(True)
             self._setCurrentWidget(self._widget)
         else:
             self._register()
