@@ -6,9 +6,9 @@ DEFAULT_STYLE_SHEET = ''
 
 
 class ConfigureDialog(QtWidgets.QDialog):
-    '''
+    """
     Configure dialog to present the user with the options to configure this step.
-    '''
+    """
 
     def __init__(self, regMethods, parent=None):
         '''
@@ -65,10 +65,10 @@ class ConfigureDialog(QtWidgets.QDialog):
             self._ui.sLineEdit.setText('1.0')
 
     def accept(self):
-        '''
+        """
         Override the accept method so that we can confirm saving an
         invalid configuration.
-        '''
+        """
         result = QtWidgets.QMessageBox.Yes
         if not self.validate():
             result = QtWidgets.QMessageBox.warning(self, 'Invalid Configuration',
@@ -80,18 +80,18 @@ class ConfigureDialog(QtWidgets.QDialog):
             QtWidgets.QDialog.accept(self)
 
     def validate(self):
-        '''
+        """
         Validate the configuration dialog fields.  For any field that is not valid
-        set the style sheet to the INVALID_STYLE_SHEET.  Return the outcome of the 
+        set the style sheet to the INVALID_STYLE_SHEET.  Return the outcome of the
         overall validity of the configuration.
-        '''
+        """
         # It's not currently possible for the configuration to be invalid, we may want to update this.
         return True
 
     def getConfig(self):
-        '''
+        """
         Get the current value of the configuration from the dialog.
-        '''
+        """
         config = {}
         config['UI Mode'] = self._ui.UICheckBox.isChecked()
         config['Registration Method'] = self._ui.regMethodsComboBox.currentText()
@@ -107,9 +107,9 @@ class ConfigureDialog(QtWidgets.QDialog):
         return config
 
     def setConfig(self, config):
-        '''
+        """
         Set the current value of the configuration for the dialog.
-        '''
+        """
         self._ui.UICheckBox.setChecked(bool(config['UI Mode']))
         self._ui.regMethodsComboBox.setCurrentIndex(self._regMethods.index(config['Registration Method']))
         self._ui.xtolLineEdit.setText(config['Min Relative Error'])
