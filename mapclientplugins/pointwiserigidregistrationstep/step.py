@@ -43,7 +43,7 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
 
     def __init__(self, location):
         super(PointWiseRigidRegistrationStep, self).__init__('Point-wise Rigid Registration', location)
-        self._configured = False  # A step cannot be executed until it has been configured.
+        self._configured = True  # A step cannot be executed until it has been configured.
         self._category = 'Registration'
         # Add any other initialisation code here:
         self._icon = QtGui.QImage(':/pointwiserigidregistrationstep/images/pointwiserigidregicon.png')
@@ -64,7 +64,6 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
                       'http://physiomeproject.org/workflow/1.0/rdf-schema#provides',
                       'python#float'))
         self._config = {}
-        self._config['identifier'] = ''
         self._config['UI Mode'] = True
         self._config['Registration Method'] = 'Correspondent Affine'
         self._config['Min Relative Error'] = '1e-3'
@@ -72,6 +71,8 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._config['Init Trans'] = [0.0, 0.0, 0.0]
         self._config['Init Rot'] = [0.0, 0.0, 0.0]
         self._config['Init Scale'] = 1.0
+
+        self._identifier = ''
 
         self.sourceData = None
         self.targetData = None
@@ -206,7 +207,6 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
             self._configured = True
         """
         dlg = ConfigureDialog(sorted(regMethods.keys()), self._main_window)
-        dlg.identifierOccursCount = self._identifierOccursCount
         dlg.setConfig(self._config)
         dlg.validate()
         dlg.setModal(True)
@@ -221,13 +221,13 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         """
         The identifier is a string that must be unique within a workflow.
         """
-        return self._config['identifier']
+        return self._identifier
 
     def setIdentifier(self, identifier):
         """
         The framework will set the identifier for this step when it is loaded.
         """
-        self._config['identifier'] = identifier
+        self._identifier = identifier
 
     def serialize(self):
         """
@@ -245,7 +245,6 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._parseLegacyParams()
 
         d = ConfigureDialog(sorted(regMethods.keys()))
-        d.identifierOccursCount = self._identifierOccursCount
         d.setConfig(self._config)
         self._configured = d.validate()
 

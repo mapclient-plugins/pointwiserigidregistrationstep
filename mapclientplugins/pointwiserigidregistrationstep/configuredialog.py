@@ -19,14 +19,6 @@ class ConfigureDialog(QtWidgets.QDialog):
         self._ui = Ui_Dialog()
         self._ui.setupUi(self)
 
-        # Keep track of the previous identifier so that we can track changes
-        # and know how many occurrences of the current identifier there should
-        # be.
-        self._previousIdentifier = ''
-        # Set a place holder for a callable that will get set from the step.
-        # We will use this method to decide whether the identifier is unique.
-        self.identifierOccursCount = None
-
         self._regMethods = regMethods
         self._setupDialog()
         self._makeConnections()
@@ -46,8 +38,6 @@ class ConfigureDialog(QtWidgets.QDialog):
         self._ui.sLineEdit.setValidator(QtGui.QDoubleValidator())
 
     def _makeConnections(self):
-        self._ui.lineEdit0.textChanged.connect(self.validate)
-
         self._ui.txLineEdit.textChanged.connect(self._fieldsUpdated)
         self._ui.tyLineEdit.textChanged.connect(self._fieldsUpdated)
         self._ui.tzLineEdit.textChanged.connect(self._fieldsUpdated)
@@ -95,27 +85,14 @@ class ConfigureDialog(QtWidgets.QDialog):
         set the style sheet to the INVALID_STYLE_SHEET.  Return the outcome of the 
         overall validity of the configuration.
         '''
-        # Determine if the current identifier is unique throughout the workflow
-        # The identifierOccursCount method is part of the interface to the workflow framework.
-        value = self.identifierOccursCount(self._ui.lineEdit0.text())
-        valid = (value == 0) or (value == 1 and self._previousIdentifier == self._ui.lineEdit0.text())
-        if valid:
-            self._ui.lineEdit0.setStyleSheet(DEFAULT_STYLE_SHEET)
-        else:
-            self._ui.lineEdit0.setStyleSheet(INVALID_STYLE_SHEET)
-
-        self._ui.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(valid)
-        return valid
+        # It's not currently possible for the configuration to be invalid, we may want to update this.
+        return True
 
     def getConfig(self):
         '''
-        Get the current value of the configuration from the dialog.  Also
-        set the _previousIdentifier value so that we can check uniqueness of the
-        identifier over the whole of the workflow.
+        Get the current value of the configuration from the dialog.
         '''
-        self._previousIdentifier = self._ui.lineEdit0.text()
         config = {}
-        config['identifier'] = self._ui.lineEdit0.text()
         config['UI Mode'] = self._ui.UICheckBox.isChecked()
         config['Registration Method'] = self._ui.regMethodsComboBox.currentText()
         config['Min Relative Error'] = self._ui.xtolLineEdit.text()
@@ -131,12 +108,8 @@ class ConfigureDialog(QtWidgets.QDialog):
 
     def setConfig(self, config):
         '''
-        Set the current value of the configuration for the dialog.  Also
-        set the _previousIdentifier value so that we can check uniqueness of the
-        identifier over the whole of the workflow.
+        Set the current value of the configuration for the dialog.
         '''
-        self._previousIdentifier = config['identifier']
-        self._ui.lineEdit0.setText(config['identifier'])
         self._ui.UICheckBox.setChecked(bool(config['UI Mode']))
         self._ui.regMethodsComboBox.setCurrentIndex(self._regMethods.index(config['Registration Method']))
         self._ui.xtolLineEdit.setText(config['Min Relative Error'])

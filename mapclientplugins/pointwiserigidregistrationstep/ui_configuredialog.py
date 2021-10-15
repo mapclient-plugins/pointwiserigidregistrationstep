@@ -17,7 +17,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName(u"Dialog")
-        Dialog.resize(436, 393)
+        Dialog.resize(436, 285)
         self.gridLayout = QGridLayout(Dialog)
         self.gridLayout.setObjectName(u"gridLayout")
         self.configGroupBox = QGroupBox(Dialog)
@@ -25,76 +25,51 @@ class Ui_Dialog(object):
         self.formLayout = QFormLayout(self.configGroupBox)
         self.formLayout.setObjectName(u"formLayout")
         self.formLayout.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
-        self.label0 = QLabel(self.configGroupBox)
-        self.label0.setObjectName(u"label0")
-
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label0)
-
-        self.lineEdit0 = QLineEdit(self.configGroupBox)
-        self.lineEdit0.setObjectName(u"lineEdit0")
-
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.lineEdit0)
-
         self.label1 = QLabel(self.configGroupBox)
         self.label1.setObjectName(u"label1")
 
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label1)
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label1)
 
         self.UICheckBox = QCheckBox(self.configGroupBox)
         self.UICheckBox.setObjectName(u"UICheckBox")
         self.UICheckBox.setChecked(True)
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.UICheckBox)
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.UICheckBox)
 
         self.label2 = QLabel(self.configGroupBox)
         self.label2.setObjectName(u"label2")
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label2)
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label2)
 
         self.regMethodsComboBox = QComboBox(self.configGroupBox)
         self.regMethodsComboBox.setObjectName(u"regMethodsComboBox")
 
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.regMethodsComboBox)
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.regMethodsComboBox)
 
         self.label3 = QLabel(self.configGroupBox)
         self.label3.setObjectName(u"label3")
 
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label3)
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label3)
 
         self.xtolLineEdit = QLineEdit(self.configGroupBox)
         self.xtolLineEdit.setObjectName(u"xtolLineEdit")
 
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.xtolLineEdit)
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.xtolLineEdit)
 
         self.label4 = QLabel(self.configGroupBox)
         self.label4.setObjectName(u"label4")
 
-        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.label4)
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.label4)
 
         self.sampleLineEdit = QLineEdit(self.configGroupBox)
         self.sampleLineEdit.setObjectName(u"sampleLineEdit")
 
-        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.sampleLineEdit)
+        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.sampleLineEdit)
 
         self.label = QLabel(self.configGroupBox)
         self.label.setObjectName(u"label")
 
-        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.label)
-
-        self.label_2 = QLabel(self.configGroupBox)
-        self.label_2.setObjectName(u"label_2")
-
-        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_2)
-
-        self.label_3 = QLabel(self.configGroupBox)
-        self.label_3.setObjectName(u"label_3")
-
-        self.formLayout.setWidget(7, QFormLayout.LabelRole, self.label_3)
-
-        self.sLineEdit = QLineEdit(self.configGroupBox)
-        self.sLineEdit.setObjectName(u"sLineEdit")
-
-        self.formLayout.setWidget(7, QFormLayout.FieldRole, self.sLineEdit)
+        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.label)
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -129,7 +104,12 @@ class Ui_Dialog(object):
         self.horizontalLayout_2.addWidget(self.tzLineEdit)
 
 
-        self.formLayout.setLayout(5, QFormLayout.FieldRole, self.horizontalLayout_2)
+        self.formLayout.setLayout(4, QFormLayout.FieldRole, self.horizontalLayout_2)
+
+        self.label_2 = QLabel(self.configGroupBox)
+        self.label_2.setObjectName(u"label_2")
+
+        self.formLayout.setWidget(5, QFormLayout.LabelRole, self.label_2)
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
@@ -164,7 +144,17 @@ class Ui_Dialog(object):
         self.horizontalLayout_3.addWidget(self.rzLineEdit)
 
 
-        self.formLayout.setLayout(6, QFormLayout.FieldRole, self.horizontalLayout_3)
+        self.formLayout.setLayout(5, QFormLayout.FieldRole, self.horizontalLayout_3)
+
+        self.label_3 = QLabel(self.configGroupBox)
+        self.label_3.setObjectName(u"label_3")
+
+        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_3)
+
+        self.sLineEdit = QLineEdit(self.configGroupBox)
+        self.sLineEdit.setObjectName(u"sLineEdit")
+
+        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.sLineEdit)
 
 
         self.gridLayout.addWidget(self.configGroupBox, 0, 0, 1, 1)
@@ -187,7 +177,6 @@ class Ui_Dialog(object):
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Configure Dialog", None))
         self.configGroupBox.setTitle("")
-        self.label0.setText(QCoreApplication.translate("Dialog", u"identifier:  ", None))
         self.label1.setText(QCoreApplication.translate("Dialog", u"UI Mode:  ", None))
         self.UICheckBox.setText("")
         self.label2.setText(QCoreApplication.translate("Dialog", u"Registration Method:  ", None))
@@ -195,13 +184,13 @@ class Ui_Dialog(object):
         self.label4.setText(QCoreApplication.translate("Dialog", u"Points to Sample:", None))
         self.sampleLineEdit.setInputMask("")
         self.label.setText(QCoreApplication.translate("Dialog", u"Initial Translation:", None))
-        self.label_2.setText(QCoreApplication.translate("Dialog", u"Initial Rotation:", None))
-        self.label_3.setText(QCoreApplication.translate("Dialog", u"Initial Scale:", None))
         self.label_4.setText(QCoreApplication.translate("Dialog", u"x", None))
         self.label_5.setText(QCoreApplication.translate("Dialog", u"y", None))
         self.label_6.setText(QCoreApplication.translate("Dialog", u"z", None))
+        self.label_2.setText(QCoreApplication.translate("Dialog", u"Initial Rotation:", None))
         self.label_7.setText(QCoreApplication.translate("Dialog", u"x", None))
         self.label_8.setText(QCoreApplication.translate("Dialog", u"y", None))
         self.label_9.setText(QCoreApplication.translate("Dialog", u"z", None))
+        self.label_3.setText(QCoreApplication.translate("Dialog", u"Initial Scale:", None))
     # retranslateUi
 
