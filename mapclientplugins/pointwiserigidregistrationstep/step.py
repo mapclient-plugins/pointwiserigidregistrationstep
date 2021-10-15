@@ -1,7 +1,6 @@
-'''
+"""
 MAP Client Plugin Step
-'''
-import os
+"""
 from PySide2 import QtGui
 import json
 
@@ -15,7 +14,6 @@ from mapclientplugins.pointwiserigidregistrationstep.mayaviregistrationviewerwid
 from gias2.mappluginutils.datatypes import transformations as T
 
 import numpy as np
-import time
 
 regMethods = {
     'Correspondent Rigid': AF.fitRigid,
@@ -39,9 +37,9 @@ regMethodTransforms = {
 
 
 class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
-    '''
+    """
     Step for rigid-body and scaling registration of 2 point clouds.
-    '''
+    """
 
     def __init__(self, location):
         super(PointWiseRigidRegistrationStep, self).__init__('Point-wise Rigid Registration', location)
@@ -84,11 +82,11 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._widget = None
 
     def execute(self):
-        '''
+        """
         Add your code here that will kick off the execution of the step.
         Make sure you call the _doneExecution() method when finished.  This method
         may be connected up to a button in a widget for example.
-        '''
+        """
         # Put your execute step code here before calling the '_doneExecution' method.
         if self._config['UI Mode']:
             self._widget = MayaviRegistrationViewerWidget(
@@ -173,22 +171,22 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self.RMSE = None
 
     def setPortData(self, index, dataIn):
-        '''
+        """
         Add your code here that will set the appropriate objects for this step.
         The index is the index of the port in the port list.  If there is only one
         uses port for this step then the index can be ignored.
-        '''
+        """
         if index == 0:
             self.sourceData = np.array(dataIn, dtype=float)  # ju#pointcloud
         else:
             self.targetData = np.array(dataIn, dtype=float)  # ju#pointcloud
 
     def getPortData(self, index):
-        '''
+        """
         Add your code here that will return the appropriate objects for this step.
         The index is the index of the port in the port list.  If there is only one
         provides port for this step then the index can be ignored.
-        '''
+        """
         if index == 2:
             portData2 = self.sourceDataAligned  # ju#pointcloud
             return portData2.tolist()
@@ -200,13 +198,13 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
             return portData4
 
     def configure(self):
-        '''
+        """
         This function will be called when the configure icon on the step is
         clicked.  It is appropriate to display a configuration dialog at this
         time.  If the conditions for the configuration of this step are complete
         then set:
             self._configured = True
-        '''
+        """
         dlg = ConfigureDialog(sorted(regMethods.keys()), self._main_window)
         dlg.identifierOccursCount = self._identifierOccursCount
         dlg.setConfig(self._config)
@@ -220,29 +218,29 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._configuredObserver()
 
     def getIdentifier(self):
-        '''
+        """
         The identifier is a string that must be unique within a workflow.
-        '''
+        """
         return self._config['identifier']
 
     def setIdentifier(self, identifier):
-        '''
+        """
         The framework will set the identifier for this step when it is loaded.
-        '''
+        """
         self._config['identifier'] = identifier
 
     def serialize(self):
-        '''
+        """
         Add code to serialize this step to disk. Returns a json string for
         mapclient to serialise.
-        '''
+        """
         return json.dumps(self._config, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
     def deserialize(self, string):
-        '''
+        """
         Add code to deserialize this step from disk. Parses a json string
         given by mapclient
-        '''
+        """
         self._config.update(json.loads(string))
         self._parseLegacyParams()
 
@@ -252,7 +250,8 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         self._configured = d.validate()
 
     def _parseLegacyParams(self):
-        """Turn strs of lists into lists in config
+        """
+        Turn strs of lists into lists in config
         """
 
         def _parseStrList(s):

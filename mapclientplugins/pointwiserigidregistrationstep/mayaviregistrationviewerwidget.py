@@ -1,7 +1,7 @@
-'''
+"""
 MAP Client, a program to generate detailed musculoskeletal models for OpenSim.
     Copyright (C) 2012  University of Auckland
-    
+
 This file is part of MAP Client. (http://launchpad.net/mapclient)
 
     MAP Client is free software: you can redistribute it and/or modify
@@ -16,10 +16,8 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
 
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
-'''
+"""
 import os
-
-os.environ['ETS_TOOLKIT'] = 'qt'
 
 from PySide2.QtWidgets import QDialog, QAbstractItemView, QTableWidgetItem
 from PySide2.QtGui import QDoubleValidator, QIntValidator, Qt
@@ -33,6 +31,7 @@ import numpy as np
 from gias2.common import math
 from gias2.mappluginutils.mayaviviewer import MayaviViewerObjectsContainer, MayaviViewerDataPoints, colours
 
+os.environ['ETS_TOOLKIT'] = 'qt'
 
 class _ExecThread(QThread):
     update = Signal(tuple)
