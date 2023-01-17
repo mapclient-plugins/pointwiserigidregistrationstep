@@ -17,7 +17,7 @@ This file is part of MAP Client. (http://launchpad.net/mapclient)
     You should have received a copy of the GNU General Public License
     along with MAP Client.  If not, see <http://www.gnu.org/licenses/>..
 """
-__version__ = '1.0.2'
+__version__ = '1.1.0'
 __author__ = 'Ju Zhang'
 __stepname__ = 'Point-wise Rigid Registration'
 __location__ = 'https://github.com/mapclient-plugins/pointwiserigidregistrationstep/archive/v1.0.1.zip'
