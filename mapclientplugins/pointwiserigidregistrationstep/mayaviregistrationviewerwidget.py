@@ -21,10 +21,10 @@ import os
 
 os.environ['ETS_TOOLKIT'] = 'qt'
 
-from PySide2.QtWidgets import QDialog, QAbstractItemView, QTableWidgetItem
-from PySide2.QtGui import QDoubleValidator, QIntValidator, Qt
-from PySide2.QtCore import Qt
-from PySide2.QtCore import QThread, Signal
+from PySide6.QtWidgets import QDialog, QAbstractItemView, QTableWidgetItem
+from PySide6.QtGui import QDoubleValidator, QIntValidator, Qt
+from PySide6.QtCore import Qt
+from PySide6.QtCore import QThread, Signal
 
 from mapclientplugins.pointwiserigidregistrationstep.ui_mayaviregistrationviewerwidget import Ui_Dialog
 from traits.api import on_trait_change

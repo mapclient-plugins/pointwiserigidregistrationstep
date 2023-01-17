@@ -1,4 +1,4 @@
-from PySide2 import QtGui, QtWidgets
+from PySide6 import QtGui, QtWidgets
 from mapclientplugins.pointwiserigidregistrationstep.ui_configuredialog import Ui_Dialog
 
 INVALID_STYLE_SHEET = 'background-color: rgba(239, 0, 0, 50)'
