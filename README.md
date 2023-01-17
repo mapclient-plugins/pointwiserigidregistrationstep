@@ -7,7 +7,9 @@ rigid-body plus scaling, and affine transformation.
 
 Requires
 --------
-- GIAS2 : https://bitbucket.org/jangle/gias2
+- GIAS3 - Common: https://github.com/musculoskeletal/gias3.common
+- GIAS3 - Registration: https://github.com/musculoskeletal/gias3.registration
+- GIAS3 - MAP Client Plugin Utilities: https://github.com/musculoskeletal/gias3.mapclientpluginutilities
 
 Inputs
 ------

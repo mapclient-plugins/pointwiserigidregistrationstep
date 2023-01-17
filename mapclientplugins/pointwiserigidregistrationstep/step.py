@@ -1,21 +1,19 @@
 '''
 MAP Client Plugin Step
 '''
-import os
 from PySide2 import QtGui
 import json
 
 from mapclient.mountpoints.workflowstep import WorkflowStepMountPoint
 from mapclientplugins.pointwiserigidregistrationstep.configuredialog import ConfigureDialog
 
-from gias2.registration import alignment_fitting as AF
-from gias2.common import transform3D
+from gias3.registration import alignment_fitting as AF
+from gias3.common import transform3D
 from mapclientplugins.pointwiserigidregistrationstep.mayaviregistrationviewerwidget import \
     MayaviRegistrationViewerWidget
-from gias2.mappluginutils.datatypes import transformations as T
+from gias3.mapclientpluginutilities.datatypes import transformations as T
 
 import numpy as np
-import time
 
 regMethods = {
     'Correspondent Rigid': AF.fitRigid,

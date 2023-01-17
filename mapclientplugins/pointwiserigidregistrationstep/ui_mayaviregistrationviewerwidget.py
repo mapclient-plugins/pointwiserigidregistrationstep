@@ -12,7 +12,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-from gias2.mappluginutils.mayaviviewer.mayaviscenewidget import MayaviSceneWidget
+from gias3.mapclientpluginutilities.viewers.mayaviscenewidget import MayaviSceneWidget
 
 
 class Ui_Dialog(object):

@@ -30,8 +30,9 @@ from mapclientplugins.pointwiserigidregistrationstep.ui_mayaviregistrationviewer
 from traits.api import on_trait_change
 
 import numpy as np
-from gias2.common import math
-from gias2.mappluginutils.mayaviviewer import MayaviViewerObjectsContainer, MayaviViewerDataPoints, colours
+from gias3.common import math
+from gias3.mapclientpluginutilities.viewers import MayaviViewerObjectsContainer, colours
+from gias3.mapclientpluginutilities.viewers.mayaviviewerdatapoints import MayaviViewerDataPoints
 
 
 class _ExecThread(QThread):
