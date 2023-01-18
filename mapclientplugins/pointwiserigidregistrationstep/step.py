@@ -146,11 +146,11 @@ class PointWiseRigidRegistrationStep(WorkflowStepMountPoint):
         if x0 is None:
             T, self.sourceDataAligned, \
             (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, xtol=xtol,
-                                     sample=samples, outputErrors=True)
+                                     sample=samples, output_errors=True)
         else:
             T, self.sourceDataAligned, \
             (rmse0, self.RMSE) = reg(self.sourceData, self.targetData, t0=x0, xtol=xtol,
-                                     sample=samples, outputErrors=True)
+                                     sample=samples, output_errors=True)
 
         self.transform = regMethodTransforms[self._config['Registration Method']](T)
         if self._config['Registration Method'] != 'Correspondent Affine':

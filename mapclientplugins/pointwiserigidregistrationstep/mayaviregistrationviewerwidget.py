@@ -88,11 +88,11 @@ class MayaviRegistrationViewerWidget(QDialog):
         # create self._objects
         self._objects = MayaviViewerObjectsContainer()
         self._objects.addObject('source',
-                                MayaviViewerDataPoints('source', self._sourceData, renderArgs=self._sourceRenderArgs))
+                                MayaviViewerDataPoints('source', self._sourceData, render_args=self._sourceRenderArgs))
         self._objects.addObject('target',
-                                MayaviViewerDataPoints('target', self._targetData, renderArgs=self._targetRenderArgs))
+                                MayaviViewerDataPoints('target', self._targetData, render_args=self._targetRenderArgs))
         self._objects.addObject('registered', MayaviViewerDataPoints('registered', self._sourceData,
-                                                                     renderArgs=self._registeredRenderArgs))
+                                                                     render_args=self._registeredRenderArgs))
 
         self._setupGui()
         self._makeConnections()
