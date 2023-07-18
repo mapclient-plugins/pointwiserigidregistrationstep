@@ -168,9 +168,9 @@ class MayaviRegistrationViewerWidget(QDialog):
 
         self._ui.tableWidget.setRowCount(self._objects.getNumberOfObjects())
         self._ui.tableWidget.verticalHeader().setVisible(False)
-        self._ui.tableWidget.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self._ui.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
-        self._ui.tableWidget.setSelectionMode(QAbstractItemView.SingleSelection)
+        self._ui.tableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self._ui.tableWidget.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self._ui.tableWidget.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
 
         self._add_object_to_table(0, 'source', self._objects.getObject('source'))
         self._add_object_to_table(1, 'target', self._objects.getObject('target'))
